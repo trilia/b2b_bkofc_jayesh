@@ -42,13 +42,13 @@ public class DepartmentServiceTest extends BaseSpringAwareTest {
     @Qualifier("deptService")
     private DepartmentService __service;
     
-    //@Test
+    @Test
     public void test_addDepartment() {
         DepartmentBean dept = makeDept();
         __service.add(dept);
     }
     
-    @Test
+    //@Test
     public void test_getEmployees() {
         
         List<EmployeeBean> list = __service.getEmployees("BOARD");

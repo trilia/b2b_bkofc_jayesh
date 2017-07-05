@@ -31,28 +31,28 @@ public class SupplierLocationServiceImpl extends AbstractServiceImpl<SupplierLoc
         super();
     }
     
-    @Transactional(readOnly=true)
+    @Transactional(readOnly=true, noRollbackFor={javax.persistence.NoResultException.class})
     public SupplierLocationEntity findBySupplierLocationCode(String supplierLocationCode) {
     	SupplierLocationEntity bean = supplierLocRepo.findByLocationCode(supplierLocationCode);
         return(bean);
     }
     
     @Override
-    @Transactional(readOnly=true)
+    @Transactional(readOnly=true, noRollbackFor={javax.persistence.NoResultException.class})
     public List<SupplierLocationEntity> findAll() {
     	List<SupplierLocationEntity> list = supplierLocRepo.findAll();
         return(list);
     }
     
     @Override
-    @Transactional(readOnly=true)
+    @Transactional(readOnly=true, noRollbackFor={javax.persistence.NoResultException.class})
     public SupplierLocationEntity find(Long id) {
     	SupplierLocationEntity supp = supplierLocRepo.findOne(id);
         return(supp);
     }
     
     @Override
-    @Transactional
+    @Transactional(readOnly=true, noRollbackFor={javax.persistence.NoResultException.class})
     public void delete(Long id) {
     }
     

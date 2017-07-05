@@ -18,7 +18,7 @@ import com.olp.jpa.domain.docu.be.model.SupplierEntity;
 public class SupplierRepositoryImpl extends AbstractRepositoryImpl<SupplierEntity, Long> implements SupplierRepository {
     
     @Override
-    @Transactional(readOnly=true)
+    @Transactional(readOnly=true, noRollbackFor={javax.persistence.NoResultException.class})
     public SupplierEntity findBySupplierCode(String supplierCode) {
         
         IContext ctx = ContextManager.getContext();
@@ -34,7 +34,7 @@ public class SupplierRepositoryImpl extends AbstractRepositoryImpl<SupplierEntit
     }
     
     @Override
-    @Transactional(readOnly=true)
+    @Transactional(readOnly=true, noRollbackFor={javax.persistence.NoResultException.class})
     public SupplierEntity findBySupplierName(String supplierName) {
         
         IContext ctx = ContextManager.getContext();

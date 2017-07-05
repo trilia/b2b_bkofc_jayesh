@@ -1,4 +1,4 @@
-package com.olp.jpa.domain.docu.be;
+package com.olp.jpa.domain.docu.be.repo;
 
 import javax.jws.WebMethod;
 

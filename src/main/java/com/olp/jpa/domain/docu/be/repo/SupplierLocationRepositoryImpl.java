@@ -18,7 +18,7 @@ import com.olp.jpa.domain.docu.be.model.SupplierLocationEntity;
 public class SupplierLocationRepositoryImpl extends AbstractRepositoryImpl<SupplierLocationEntity, Long> implements SupplierLocationRepository {
     
     @Override
-    @Transactional(readOnly=true)
+    @Transactional(readOnly=true, noRollbackFor={javax.persistence.NoResultException.class})
     public SupplierLocationEntity findByLocationCode(String locationCode) {
         
         IContext ctx = ContextManager.getContext();

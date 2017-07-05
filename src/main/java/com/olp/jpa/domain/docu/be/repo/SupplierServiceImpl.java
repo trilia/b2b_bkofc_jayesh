@@ -1,4 +1,4 @@
-package com.olp.jpa.domain.docu.be;
+package com.olp.jpa.domain.docu.be.repo;
 
 import java.util.List;
 
@@ -11,8 +11,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.olp.jpa.common.AbstractServiceImpl;
 import com.olp.jpa.common.ITextRepository;
 import com.olp.jpa.domain.docu.be.model.SupplierEntity;
-import com.olp.jpa.domain.docu.be.repo.SupplierLocationRepository;
-import com.olp.jpa.domain.docu.be.repo.SupplierRepository;
 import com.olp.jpa.domain.docu.ut.model.DepartmentBean;
 
 /**
@@ -35,28 +33,28 @@ public class SupplierServiceImpl extends AbstractServiceImpl<SupplierEntity, Lon
     }
     
     @Override
-    @Transactional(readOnly=true)
+    @Transactional(readOnly=true, noRollbackFor={javax.persistence.NoResultException.class})
     public SupplierEntity findBySupplierCode(String supplierCode) {
     	SupplierEntity bean = supplierRepo.findBySupplierCode(supplierCode);
         return(bean);
     }
     
     @Override
-    @Transactional(readOnly=true)
+    @Transactional(readOnly=true, noRollbackFor={javax.persistence.NoResultException.class})
     public List<SupplierEntity> findAll() {
     	List<SupplierEntity> list = supplierRepo.findAll();
         return(list);
     }
     
     @Override
-    @Transactional(readOnly=true)
+    @Transactional(readOnly=true, noRollbackFor={javax.persistence.NoResultException.class})
     public SupplierEntity find(Long id) {
     	SupplierEntity supp = supplierRepo.findOne(id);
         return(supp);
     }
     
     @Override
-    @Transactional
+    @Transactional(readOnly=true, noRollbackFor={javax.persistence.NoResultException.class})
     public void delete(Long id) {
     }
     
