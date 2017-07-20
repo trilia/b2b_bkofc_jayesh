@@ -50,16 +50,17 @@ public class SupplierLocationEntity {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="partner-id", nullable=false)
+	@Column(name="partner_id", nullable=false)
+	@Field(index=Index.NO, store=Store.NO, analyze=Analyze.NO)
 	private Long id;
 	
 	@KeyAttribute
-	@Field(index=Index.NO,store=Store.NO, analyze=Analyze.NO)
+	@Field(index=Index.NO,store=Store.YES, analyze=Analyze.NO)
 	@Column(name="tenant_id", nullable=false)
 	private String tenantId;
 	
 	@KeyAttribute
-	@Column(name="location-code", nullable=false)
+	@Column(name="location_code", nullable=false)
 	@JoinColumn(name="locationCode_ref")
 	@Field(index=Index.YES,store=Store.NO, analyze=Analyze.NO)
 	private String locationCode;
@@ -90,7 +91,7 @@ public class SupplierLocationEntity {
 	@IndexedEmbedded
 	private RevisionControlBean revisionControl;
 	
-	@OneToMany(mappedBy="deptRef", cascade={javax.persistence.CascadeType.ALL})
+	@OneToMany(mappedBy="supplier_loc_ref", cascade={javax.persistence.CascadeType.ALL})
 	private List<BankAccountEntity> bankAccounts;
 
 	/**

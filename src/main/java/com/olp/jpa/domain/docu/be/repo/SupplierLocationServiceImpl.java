@@ -8,9 +8,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.olp.fwk.common.error.EntityValidationException;
 import com.olp.jpa.common.AbstractServiceImpl;
 import com.olp.jpa.common.ITextRepository;
+import com.olp.jpa.domain.docu.be.model.BankAccountEntity;
+import com.olp.jpa.domain.docu.be.model.SupplierEntity;
 import com.olp.jpa.domain.docu.be.model.SupplierLocationEntity;
+import com.olp.jpa.domain.docu.org.model.LocationEntity;
+import com.olp.jpa.domain.docu.po.model.PurchaseOrderEntity;
 
 /**
  *
@@ -26,6 +31,10 @@ public class SupplierLocationServiceImpl extends AbstractServiceImpl<SupplierLoc
     @Autowired
     @Qualifier("supplierLocationRepository")
     private SupplierLocationRepository supplierLocRepo;
+    
+    @Autowired
+    @Qualifier("bankAcctRepository")
+    private BankAccountRepository bankAccRepo;
     
     public SupplierLocationServiceImpl() {
         super();
@@ -75,6 +84,7 @@ public class SupplierLocationServiceImpl extends AbstractServiceImpl<SupplierLoc
         return(buff.toString());
     }
     
+    
     @Override
     protected Outcome preProcess(int opCode, SupplierLocationEntity entity) {
         
@@ -112,6 +122,49 @@ public class SupplierLocationServiceImpl extends AbstractServiceImpl<SupplierLoc
     
     private void removeReferences(SupplierLocationEntity supp) {
         
-        
     }
+
+	/* (non-Javadoc)
+	 * @see com.olp.jpa.common.AbstractServiceImpl#doUpdate(java.lang.Object, java.lang.Object)
+	 */
+	@Override
+	protected SupplierLocationEntity doUpdate(SupplierLocationEntity newEntity, SupplierLocationEntity oldEntity)
+			throws EntityValidationException {
+		// TODO Auto-generated method stub
+		return super.doUpdate(newEntity, oldEntity);
+	}
+
+	@Override
+	@Transactional(readOnly=true, noRollbackFor={javax.persistence.NoResultException.class})
+    public void validate(SupplierLocationEntity entity) throws EntityValidationException {
+        List<BankAccountEntity> banks = entity.getBankAccounts();
+        List<BankAccountEntity> bank2 = null;
+        if (banks != null) {
+        	for(BankAccountEntity bank : banks){
+	            Long bankId = bank.getId();
+	            if (bankId == null) {
+	                String bankNum = bank.getBankAcctNum();
+	                if (bankNum == null || "".equals(bankNum)) {
+	                    throw new EntityValidationException("Could not validate Bank Account. Either Bank id or Bank Account Number should be present !");
+	                } else {
+	                	bank = bankAccRepo.findByAccountNumber(bankNum);
+	                    if (bank == null) {
+	                    	throw new EntityValidationException("Could not validate Bank Acount with Bank Account Number - " + bankNum);
+	                    }
+	                }
+	                banks.add(bank);
+	            } else {
+	            	bank = bankAccRepo.findOne(bankId);
+	                if (bank == null) {
+	                	throw new EntityValidationException("Could not validate Bank Acount with Bank Account id - " + bankId);
+	                }
+	                banks.add(bank);
+	            }
+        	}
+        }
+        
+        if (banks != null) {
+        	entity.setBankAccounts(bank2);
+        }
+	}
 }

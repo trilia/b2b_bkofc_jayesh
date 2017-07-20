@@ -8,9 +8,14 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.olp.fwk.common.error.EntityValidationException;
 import com.olp.jpa.common.AbstractServiceImpl;
 import com.olp.jpa.common.ITextRepository;
+import com.olp.jpa.domain.docu.be.model.LegalInfoBean;
 import com.olp.jpa.domain.docu.be.model.SupplierEntity;
+import com.olp.jpa.domain.docu.be.model.SupplierLocationEntity;
+import com.olp.jpa.domain.docu.org.model.LocationEntity;
+import com.olp.jpa.domain.docu.po.model.PurchaseOrderEntity;
 import com.olp.jpa.domain.docu.ut.model.DepartmentBean;
 
 /**
@@ -77,6 +82,34 @@ public class SupplierServiceImpl extends AbstractServiceImpl<SupplierEntity, Lon
         return(buff.toString());
     }
     
+    @Transactional(readOnly=true, noRollbackFor={javax.persistence.NoResultException.class})
+    public void validate(SupplierEntity entity) throws EntityValidationException {
+        /*List<LegalInfoBean> legal = entity.getLegalInfo(), legal2 = null;
+        if (legal != null) {
+            Long suppId = supp.getId();
+            if (suppId == null) {
+                String suppCode = supp.getSupplierCode();
+                if (suppCode == null || "".equals(suppCode)) {
+                    throw new EntityValidationException("Could not validate supplier. Either supplier id or code should be present !");
+                } else {
+                	supp2 = supplierRepo.findBySupplierCode(suppCode);
+                    if (supp2 == null) {
+                    	throw new EntityValidationException("Could not validate supplier with supplier code - " + suppCode);
+                    }
+                }
+            } else {
+            	supp2 = supplierRepo.findOne(suppId);
+                if (supp2 == null) {
+                	throw new EntityValidationException("Could not validate supplier with supplier id - " + suppId);
+                }
+            }
+        }
+        
+        if (supp2 != null) {
+        	entity.setSupplierRef(supp2);
+        }*/
+	}
+    
     @Override
     protected Outcome preProcess(int opCode, SupplierEntity entity) {
         
@@ -111,19 +144,4 @@ public class SupplierServiceImpl extends AbstractServiceImpl<SupplierEntity, Lon
         
         return(result);
     }
-    
-    
-    private void removeReferences(SupplierEntity supp) {
-        
-        if (supp == null)
-            return;
-        
-        supp.getSupplierLocations().clear();
-    }
-    
-    //@Transactional
-    private void removeReferences(List<DepartmentBean> list) {
-    	
-    }
-
 }

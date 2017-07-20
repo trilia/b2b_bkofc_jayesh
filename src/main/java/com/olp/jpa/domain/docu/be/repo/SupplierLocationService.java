@@ -4,6 +4,7 @@ import javax.jws.WebMethod;
 
 import org.springframework.data.repository.NoRepositoryBean;
 
+import com.olp.fwk.common.error.EntityValidationException;
 import com.olp.jpa.common.IJpaService;
 import com.olp.jpa.domain.docu.be.model.SupplierLocationEntity;
 
@@ -28,6 +29,8 @@ public interface SupplierLocationService extends IJpaService<SupplierLocationEnt
     
     @WebMethod(operationName="findSupplierLocationByCode")
     public SupplierLocationEntity findBySupplierLocationCode(String supplierCode);
+
+    public void validate(SupplierLocationEntity entity) throws EntityValidationException;
     
     /*@Override
     @WebMethod(operationName="addSupplierLocation")

@@ -57,23 +57,24 @@ public class SupplierEntity {
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="partner-id", nullable=false)
+	@Field(index=Index.NO, store=Store.NO, analyze=Analyze.NO)
 	private Long id;
 	
 	@KeyAttribute
-	@Field(store=Store.YES, analyze=Analyze.NO)
+	@Field(index=Index.NO,store=Store.YES, analyze=Analyze.NO)
 	@Column(name="tenant_id", nullable=false)
 	private String tenantId;
 	
 	@KeyAttribute
-	@Column(name="supplier-code", nullable=false)
-	@Field(index=Index.YES, store=Store.YES, analyze=Analyze.NO)
+	@Column(name="supplier_code", nullable=false)
+	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
 	private String supplierCode;
 	
-	@Column(name="supplier-name", nullable=false)
-	@Field(index=Index.YES, store=Store.YES, analyze=Analyze.NO)
+	@Column(name="supplier_name", nullable=false)
+	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
 	private String supplierName;
 	
-	@Column(name="legal-info", nullable=false)
+	@Column(name="legal_info", nullable=false)
 	private List<LegalInfoBean> legalInfo;
 	
 	@Embedded
