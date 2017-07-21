@@ -40,7 +40,7 @@ import com.olp.jpa.domain.docu.org.model.LocationEntity;
  *
  */
 @Entity
-@Table(name="trl_supplier_locations", uniqueConstraints={@javax.persistence.UniqueConstraint(columnNames={"tenant_id", "location-code"})})
+@Table(name="trl_supplier_locations", uniqueConstraints={@javax.persistence.UniqueConstraint(columnNames={"tenant_id", "location_code"})})
 @Indexed(index="SetupDataIndex")
 @FullTextFilterDef(name="filter-locations", impl=TenantBasedSearchFilterFactory.class)
 @NamedQueries({@javax.persistence.NamedQuery(name="Supplier.findByLocationCode", query="SELECT t from SupplierEntity t WHERE t.supplierCode = :code ")})

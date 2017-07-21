@@ -42,7 +42,7 @@ import com.olp.jpa.domain.docu.ut.model.EmployeeBean;
  */
 
 @Entity
-@Table(name="trl_suppliers", uniqueConstraints=@UniqueConstraint(columnNames={"tenant_id", "supplier-code"}))
+@Table(name="trl_suppliers", uniqueConstraints=@UniqueConstraint(columnNames={"tenant_id", "supplier_code"}))
 @NamedQueries({
 		@NamedQuery(name="Supplier.findBySupplierCode", query="SELECT t from SupplierEntity t WHERE t.supplierCode = :code and t.tenantId = :tenant"),
 		@NamedQuery(name="Supplier.findBySupplierName", query="SELECT t from SupplierEntity t WHERE t.supplierName = :name and t.tenantId = :tenant")
@@ -56,7 +56,7 @@ public class SupplierEntity {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="partner-id", nullable=false)
+	@Column(name="partner_id", nullable=false)
 	@Field(index=Index.NO, store=Store.NO, analyze=Analyze.NO)
 	private Long id;
 	
