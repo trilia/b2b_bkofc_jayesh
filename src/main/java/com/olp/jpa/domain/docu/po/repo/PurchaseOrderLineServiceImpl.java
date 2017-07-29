@@ -9,6 +9,7 @@ import com.olp.jpa.common.AbstractServiceImpl;
 import com.olp.jpa.common.ITextRepository;
 import com.olp.jpa.domain.docu.inv.model.ProductSkuEntity;
 import com.olp.jpa.domain.docu.inv.repo.ProductSkuRepository;
+import com.olp.jpa.domain.docu.po.model.PurchaseOrderEntity;
 import com.olp.jpa.domain.docu.po.model.PurchaseOrderLineEntity;
 
 /**
@@ -20,6 +21,10 @@ public class PurchaseOrderLineServiceImpl extends AbstractServiceImpl<PurchaseOr
 	@Autowired
 	@Qualifier("purchaseOrderLineRepository")
 	private PurchaseOrderLineRepository repo;
+
+	@Autowired
+	@Qualifier("purchaseOrderRepository")
+	private PurchaseOrderRepository poRepo;
 	
 	@Autowired
 	@Qualifier("prodSkuRepository")
@@ -56,11 +61,11 @@ public class PurchaseOrderLineServiceImpl extends AbstractServiceImpl<PurchaseOr
         switch(opCode) {
             
             case ADD : {
-                result = preProcessAdd(entity);
+                preProcessAdd(entity);
                 break;
             }
             case ADD_BULK : {
-                result = preProcessAdd(entity);
+                preProcessAdd(entity);
                 break;
             }
             default: {
@@ -72,8 +77,9 @@ public class PurchaseOrderLineServiceImpl extends AbstractServiceImpl<PurchaseOr
         return(result);
 	}
 
-	private AbstractServiceImpl<PurchaseOrderLineEntity, Long>.Outcome preProcessAdd(PurchaseOrderLineEntity entity) {
-		return null;
+	private void preProcessAdd(PurchaseOrderLineEntity entity) throws EntityValidationException {
+		validate(entity);
+		updateTenantWithRevision(entity);
 	}
 
 	@Override
@@ -109,6 +115,31 @@ public class PurchaseOrderLineServiceImpl extends AbstractServiceImpl<PurchaseOr
         
         if (sku2 != null) {
             entity.setSkuRef(sku2);
+        }
+        
+
+		PurchaseOrderEntity poBean = entity.getPurchaseOrderRef(), poBean2 = null;
+        if (sku != null) {
+            Long poId = poBean.getId();
+            if (poId == null) {
+                String poNumber = poBean.getPoNumber();
+                if (poNumber == null || "".equals(poNumber)) {
+                	throw new EntityValidationException("Could not validate Purchase Order entity. Either po id or Po Number should be present !");
+                }
+                poBean2 = poRepo.findByPurchaseOrder(poNumber);
+                if (poBean2 == null) {
+                	throw new EntityValidationException("Could not validate Purchase Order with PO Number - " + poNumber);
+                }
+            } else {
+            	poBean2 = poRepo.findOne(poId);
+                if (poBean2 == null) {
+                	throw new EntityValidationException("Could not validatePurchase Order with PO Id - " + poId);
+                }
+            }
+        }
+        
+        if (poBean2 != null) {
+            entity.setPurchaseOrderRef(poBean2);
         }
 	}
 }

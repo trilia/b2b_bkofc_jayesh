@@ -2,6 +2,8 @@ package com.olp.jpa.domain.docu.po.repo;
 
 import javax.persistence.TypedQuery;
 
+import org.springframework.stereotype.Repository;
+
 import com.olp.fwk.common.ContextManager;
 import com.olp.fwk.common.IContext;
 import com.olp.jpa.common.AbstractRepositoryImpl;
@@ -11,9 +13,8 @@ import com.olp.jpa.domain.docu.po.model.PurchaseOrderEntity;
  * @author Jayesh
  *
  */
+@Repository("purchaseOrderRepository")
 public class PurchaseOrderRepositoryImpl extends AbstractRepositoryImpl<PurchaseOrderEntity, Long>  implements PurchaseOrderRepository {
-
-	
 
 	/* (non-Javadoc)
 	 * @see com.olp.jpa.domain.docu.po.repo.PurchaseOrderRepository#findByPurchaseOrder(java.lang.String)

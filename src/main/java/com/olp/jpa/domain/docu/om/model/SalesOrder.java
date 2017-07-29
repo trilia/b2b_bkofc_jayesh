@@ -3,7 +3,8 @@
  */
 package com.olp.jpa.domain.docu.om.model;
 
-import java.sql.Date;
+import java.io.Serializable;
+import java.util.Date;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
@@ -15,7 +16,9 @@ import com.olp.jpa.domain.docu.cs.model.CustomerEntity;
  * @author Jayesh
  *
  */
-public class SalesOrder {
+public class SalesOrder implements Serializable {
+
+	private static final long serialVersionUID = -8054125191916739990L;
 
 	@XmlElement(name="order-id")
 	private Long id;
@@ -282,9 +285,9 @@ public class SalesOrder {
 		
 		if (!(this.customerRef == null || "".equals(this.customerRef))) {
 			CustomerEntity customerBean = new CustomerEntity();
-			//customerBean.
+			customerBean.setCustomerCode(customerRef);
 			bean.setCustomerRef(customerBean);
-			//bean.setCustomerCode(customerBean.);
+			bean.setCustomerCode(customerBean.getCustomerCode());
         }
 		
 		if (mode <= 0) {

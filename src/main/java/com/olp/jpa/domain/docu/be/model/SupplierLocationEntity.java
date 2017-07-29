@@ -1,5 +1,6 @@
 package com.olp.jpa.domain.docu.be.model;
 
+import java.io.Serializable;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -10,12 +11,14 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.search.annotations.Analyze;
+import org.hibernate.search.annotations.ContainedIn;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.Fields;
 import org.hibernate.search.annotations.FullTextFilterDef;
@@ -46,12 +49,13 @@ import com.olp.jpa.domain.docu.org.model.LocationEntity;
 @NamedQueries({@javax.persistence.NamedQuery(name="Supplier.findByLocationCode", query="SELECT t from SupplierEntity t WHERE t.supplierCode = :code ")})
 @MultiTenant(level=MultiTenant.Levels.ONE_TENANT)
 @SortCriteria(attributes={"supplierCode"})
-public class SupplierLocationEntity {
+public class SupplierLocationEntity  implements Serializable {
 	
+	private static final long serialVersionUID = -5294233297759393523L;
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="partner_id", nullable=false)
-	@Field(index=Index.NO, store=Store.NO, analyze=Analyze.NO)
+	@Column(name="supplier_loc_id", nullable=false)
 	private Long id;
 	
 	@KeyAttribute
@@ -61,7 +65,6 @@ public class SupplierLocationEntity {
 	
 	@KeyAttribute
 	@Column(name="location_code", nullable=false)
-	@JoinColumn(name="locationCode_ref")
 	@Field(index=Index.YES,store=Store.NO, analyze=Analyze.NO)
 	private String locationCode;
 	
@@ -79,20 +82,22 @@ public class SupplierLocationEntity {
     })
 	private boolean isBillingLocation;
 	
-	@Column(name="location", nullable=false)
-	@Fields({
-        @Field,
-        @Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
-    })
 	@OneToOne(cascade= CascadeType.ALL)
+	@JoinColumn(name="location_ref")
 	private LocationEntity location;
 	
 	@Embedded
 	@IndexedEmbedded
 	private RevisionControlBean revisionControl;
 	
-	@OneToMany(mappedBy="supplier_loc_ref", cascade={javax.persistence.CascadeType.ALL})
+	@OneToMany(mappedBy="supplierLocRef", cascade={javax.persistence.CascadeType.ALL})
+	@IndexedEmbedded(includeEmbeddedObjectId=true, depth=1)
 	private List<BankAccountEntity> bankAccounts;
+	
+	@ManyToOne
+	@JoinColumn(name="supplier_ref")
+	@ContainedIn
+	private SupplierEntity supplierRef;
 
 	/**
 	 * @return the id
@@ -204,6 +209,20 @@ public class SupplierLocationEntity {
 	 */
 	public void setBankAccounts(List<BankAccountEntity> bankAccounts) {
 		this.bankAccounts = bankAccounts;
+	}
+
+	/**
+	 * @return the supplierRef
+	 */
+	public SupplierEntity getSupplierRef() {
+		return supplierRef;
+	}
+
+	/**
+	 * @param supplierRef the supplierRef to set
+	 */
+	public void setSupplierRef(SupplierEntity supplierRef) {
+		this.supplierRef = supplierRef;
 	}
 
 

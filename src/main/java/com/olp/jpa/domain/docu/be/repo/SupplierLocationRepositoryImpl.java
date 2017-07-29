@@ -14,7 +14,7 @@ import com.olp.jpa.domain.docu.be.model.SupplierLocationEntity;
  *
  * @author Jayesh Jain
  */
-@Repository("supplierRepository")
+@Repository("supplierLocationRepository")
 public class SupplierLocationRepositoryImpl extends AbstractRepositoryImpl<SupplierLocationEntity, Long> implements SupplierLocationRepository {
     
     @Override

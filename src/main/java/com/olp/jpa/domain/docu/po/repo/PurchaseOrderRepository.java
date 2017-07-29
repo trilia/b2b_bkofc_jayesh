@@ -10,7 +10,6 @@ import com.olp.jpa.domain.docu.po.model.PurchaseOrderEntity;
  * @author Jayesh
  *
  */
-@NoRepositoryBean
 public interface PurchaseOrderRepository extends JpaRepository<PurchaseOrderEntity, Long>, ITextRepository<PurchaseOrderEntity, Long> {	
 	
 	public PurchaseOrderEntity findByPurchaseOrder(String purchaseOrder);

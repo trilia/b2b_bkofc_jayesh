@@ -1,15 +1,31 @@
 package com.olp.jpa.domain.docu.po.model;
 
 import java.io.Serializable;
-import java.lang.Long;
-import java.lang.String;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.persistence.*;
+import javax.persistence.Cacheable;
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
+import javax.persistence.UniqueConstraint;
 
 import org.hibernate.search.annotations.Analyze;
+import org.hibernate.search.annotations.ContainedIn;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FullTextFilterDef;
 import org.hibernate.search.annotations.Index;
@@ -22,8 +38,6 @@ import com.olp.annotations.MultiTenant;
 import com.olp.annotations.SortCriteria;
 import com.olp.jpa.common.RevisionControlBean;
 import com.olp.jpa.common.TenantBasedSearchFilterFactory;
-import com.olp.jpa.domain.docu.be.model.LegalInfoBean;
-import com.olp.jpa.domain.docu.be.model.Supplier;
 import com.olp.jpa.domain.docu.be.model.SupplierEntity;
 import com.olp.jpa.domain.docu.be.model.SupplierLocationEntity;
 import com.olp.jpa.domain.docu.org.model.LocationEntity;
@@ -50,8 +64,7 @@ public class PurchaseOrderEntity implements Serializable {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="po-id", nullable=false)
-	@Field(index=Index.NO,analyze=Analyze.NO,store=Store.NO)
+	@Column(name="po_id", nullable=false)
 	private Long id;
 	
 	@KeyAttribute
@@ -66,6 +79,7 @@ public class PurchaseOrderEntity implements Serializable {
 	
 	@Column(name="po_date", nullable=false)
 	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Temporal(TemporalType.DATE)
 	private Date poDate;
 	
 	@Column(name="description", nullable=false)
@@ -79,11 +93,16 @@ public class PurchaseOrderEntity implements Serializable {
 
 	@Column(name="fulfillment_date")
 	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Temporal(TemporalType.DATE)
 	private Date fulfillmentDate;
 
 	@Column(name="status")
 	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
 	private String status;
+	
+	@OneToMany(mappedBy="purchaseOrderRef", cascade=CascadeType.ALL)
+    @IndexedEmbedded(includeEmbeddedObjectId=true, depth=1)
+    private List<PurchaseOrderLineEntity> poLines;
 
 	@Column(name="pay_terms")
 	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.YES)
@@ -98,7 +117,8 @@ public class PurchaseOrderEntity implements Serializable {
 	private String otherTerms;
 	
 	@ManyToOne
-	@JoinColumn
+	@JoinColumn(name="supplier_ref")
+	@ContainedIn
 	private SupplierEntity supplierRef;
 	
 	@Column(name="supplier_code")
@@ -106,7 +126,8 @@ public class PurchaseOrderEntity implements Serializable {
 	private String supplierCode;
 
 	@ManyToOne
-	@JoinColumn
+	@JoinColumn(name="supplier_loc_ref")
+	@ContainedIn
 	private SupplierLocationEntity supplierLocRef;
 	
 	@Column(name="location_code")
@@ -114,11 +135,13 @@ public class PurchaseOrderEntity implements Serializable {
 	private String locationCode;
 
 	@ManyToOne
-	@JoinColumn
+	@JoinColumn(name="shipping_location")
+	@ContainedIn
 	private LocationEntity shippingLocation;
 
 	@ManyToOne
-	@JoinColumn
+	@JoinColumn(name="billing_location")
+	@ContainedIn
 	private LocationEntity billingLocation;
 	
 	@Embedded
@@ -235,6 +258,20 @@ public class PurchaseOrderEntity implements Serializable {
 	 */
 	public void setStatus(String status) {
 		this.status = status;
+	}
+
+	/**
+	 * @return the poLines
+	 */
+	public List<PurchaseOrderLineEntity> getPoLines() {
+		return poLines;
+	}
+
+	/**
+	 * @param poLines the poLines to set
+	 */
+	public void setPoLines(List<PurchaseOrderLineEntity> poLines) {
+		this.poLines = poLines;
 	}
 
 	/**

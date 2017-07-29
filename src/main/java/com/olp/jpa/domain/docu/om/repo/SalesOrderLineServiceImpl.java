@@ -1,5 +1,6 @@
 package com.olp.jpa.domain.docu.om.repo;
 
+import org.hibernate.sql.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -7,50 +8,49 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import com.olp.fwk.common.error.EntityValidationException;
 import com.olp.jpa.common.AbstractServiceImpl;
 import com.olp.jpa.common.ITextRepository;
-import com.olp.jpa.common.AbstractServiceImpl.Outcome;
-import com.olp.jpa.domain.docu.inv.model.ProductSkuEntity;
-import com.olp.jpa.domain.docu.inv.repo.ProductSkuRepository;
 import com.olp.jpa.domain.docu.om.model.OrderEnums;
+import com.olp.jpa.domain.docu.om.model.OrderEnums.OrderLineStatus;
 import com.olp.jpa.domain.docu.om.model.SalesOrderEntity;
-import com.olp.jpa.domain.docu.po.model.PurchaseOrderLineEntity;
-import com.olp.jpa.domain.docu.po.repo.PurchaseOrderLineRepository;
+import com.olp.jpa.domain.docu.om.model.SalesOrderLineEntity;
 
 /**
  * @author Jayesh
  *
  */
-public class SalesOrderLineServiceImpl extends AbstractServiceImpl<SalesOrderEntity,Long> implements SalesOrderLineService {
+public class SalesOrderLineServiceImpl extends AbstractServiceImpl<SalesOrderLineEntity,Long> implements SalesOrderLineService {
 
 	@Autowired
-	@Qualifier("salesOrderRepository")
-	private SalesOrderRepository repo;
+	@Qualifier("salesOrderLineRepository")
+	private SalesOrderLineRepository repo;
 	
 	@Override
-	public SalesOrderEntity findbyOrderNumber(String orderNumber, int partNumber) {
-		SalesOrderEntity bean = repo.findbyOrderNumber(orderNumber, partNumber);
+	public SalesOrderLineEntity findbyOrderNumber(String orderNumber, int partNumber,int lineNumber) {
+		SalesOrderLineEntity bean = repo.findbyOrderNumber(orderNumber, partNumber,lineNumber);
 		return bean;
 	}
 
 	@Override
-	protected JpaRepository<SalesOrderEntity, Long> getRepository() {
+	protected JpaRepository<SalesOrderLineEntity, Long> getRepository() {
 		return repo;
 	}
 
 	@Override
-	protected ITextRepository<SalesOrderEntity, Long> getTextRepository() {
+	protected ITextRepository<SalesOrderLineEntity, Long> getTextRepository() {
 		return repo;
 	}
 
 	@Override
-	protected String getAlternateKeyAsString(SalesOrderEntity entity) {
+	protected String getAlternateKeyAsString(SalesOrderLineEntity entity) {
 		StringBuilder buff = new StringBuilder(50);
-        buff.append("{ \"order_number\" : \"").append(entity.getOrderNumber()).append("\" }");
+        buff.append("{ \"order_number\" : \"").append(entity.getOrderNumber()).append("\" }")
+        	.append("{ \"part_number\" : \"").append(entity.getPartNumber()).append("\" }")
+        	.append("{ \"line_number\" : \"").append(entity.getLineNumber()).append("\" }");
         
         return(buff.toString());
 	}
 
 	@Override
-	protected AbstractServiceImpl<SalesOrderEntity, Long>.Outcome preProcess(int opCode, SalesOrderEntity entity)
+	protected AbstractServiceImpl<SalesOrderLineEntity, Long>.Outcome preProcess(int opCode, SalesOrderLineEntity entity)
 			throws EntityValidationException {
 		Outcome result = new Outcome();
         switch(opCode) {
@@ -72,40 +72,36 @@ public class SalesOrderLineServiceImpl extends AbstractServiceImpl<SalesOrderEnt
         return(result);
 	}
 
-	private void preProcessAdd(SalesOrderEntity entity) throws EntityValidationException {
+	private void preProcessAdd(SalesOrderLineEntity entity) throws EntityValidationException {
 		validate(entity);
 		updateTenantWithRevision(entity);    
 	}
 
 	@Override
-	protected AbstractServiceImpl<SalesOrderEntity, Long>.Outcome postProcess(int opCode, SalesOrderEntity paramT)
+	protected AbstractServiceImpl<SalesOrderLineEntity, Long>.Outcome postProcess(int opCode, SalesOrderLineEntity entity)
 			throws EntityValidationException {
-		AbstractServiceImpl<SalesOrderEntity, Long>.Outcome result = new AbstractServiceImpl.Outcome();
+		AbstractServiceImpl<SalesOrderLineEntity, Long>.Outcome result = new AbstractServiceImpl.Outcome();
 		result.setResult(true);
 
 		switch (opCode) {
+			case UPDATE :{
+				if(!OrderLineStatus.RECEIVED.equals(entity.getLineStatus().RECEIVED)){
+					//if(entity.getOrderRef().get)
+				}
+			}
 		}
 		return result;
 	}
 	
 	@Override
-	public void validate(SalesOrderEntity entity) throws EntityValidationException {
-		if(!OrderEnums.OrderStatus.RECEIVED.equals(entity.getOrderStatus())){
-			throw new EntityValidationException("New Order should have status “RECEIVED”");
+	public void validate(SalesOrderLineEntity entity) throws EntityValidationException {
+		if(OrderEnums.OrderLineType.PROMOTION.equals(entity.getLineType()) && entity.getUnitRate() > 0){
+			throw new EntityValidationException("For lineType PROMOTION , unitRate should be zero");
 		}
-		if(OrderEnums.DeliveryType.COMMITTED.equals(entity.getDeliveryType())){
-			if(null == entity.getDeliverByDate()){
-				throw new EntityValidationException("Order Delivery Date cannot be null");
-			}else if((entity.getOrderDate().compareTo(entity.getDeliverByDate()) > 0)){
-				throw new EntityValidationException("Order Delivery Date cannot be before Order Date");
-			}
+		if(entity.getReturnQuantity() > entity.getOrderQuantity()){
+			throw new EntityValidationException("ReturnQuantity cannot be greater than Order Quantity");
 		}
-		if(null == entity.getOrderNumber() || "".equals(entity.getOrderNumber().trim())){
-			throw new EntityValidationException("Order Number cannot be empty");
-		}
-		if(entity.getOrderPart() <= 0){
-			throw new EntityValidationException("Order Part Number cannot be empty");
-		}
+		
 	}
 
 }

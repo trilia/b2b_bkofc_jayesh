@@ -10,7 +10,9 @@ import java.util.List;
 import javax.persistence.*;
 
 import org.hibernate.search.annotations.Analyze;
+import org.hibernate.search.annotations.ContainedIn;
 import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Fields;
 import org.hibernate.search.annotations.FullTextFilterDef;
 import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
@@ -35,23 +37,22 @@ import com.olp.jpa.domain.docu.org.model.LocationEntity;
  */
 
 @Entity
-@Table(name="purchaseOrderLine", uniqueConstraints=@UniqueConstraint(columnNames={"tenant_id", "po_number"}))
+@Table(name="purchaseOrderLine", uniqueConstraints=@UniqueConstraint(columnNames={"tenant_id", "po_number", "line_number"}))
 @NamedQueries({
-		@NamedQuery(name="PurchaseOrderLine.findByPurchaseOrderNumber", query="SELECT t from PurchaseOrderLineEntity t WHERE t.poNumber = :poNumber and t.tenantId = :tenant")
+		@NamedQuery(name="PurchaseOrderLine.findByPurchaseOrderNumber", query="SELECT t from PurchaseOrderLineEntity t WHERE t.poNumber = :poNumber and t.lineNumber = :line and t.tenantId = :tenant")
 		})
 @Cacheable(true)
 @Indexed(index="SetupDataIndex")
 @FullTextFilterDef(name="filter-purchaseorderline", impl=TenantBasedSearchFilterFactory.class)
 @MultiTenant(level = MultiTenant.Levels.ONE_TENANT)
-@SortCriteria(attributes={"lineNumber"})
+@SortCriteria(attributes={"poNumber","lineNumber"})
 public class PurchaseOrderLineEntity implements Serializable {
 
 	private static final long serialVersionUID = 1L;
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
-	@Column(name="po-id", nullable=false)
-	@Field(index=Index.NO,analyze=Analyze.NO,store=Store.NO)
+	@Column(name="po_line_id", nullable=false)
 	private Long id;
 	
 	@KeyAttribute
@@ -60,44 +61,75 @@ public class PurchaseOrderLineEntity implements Serializable {
 	private Long tenantId;
 	
 	@KeyAttribute
-	@Column(name="po_number", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Column(name="line_number", nullable=false)
+    @Fields({
+        @Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+    })
 	private String lineNumber;
 	
+	@KeyAttribute 
+    @Column(name="po_number")
+    @Fields({
+        @Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+    })
+    private String poNumber;  
+	
 	@Column(name="line_type", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+    @Fields({
+        @Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+    })
 	private PoLineType lineType;
 	
-	@Column(name="sku_ref", nullable=false)
 	@ManyToOne
+	@JoinColumn(name="purchase_order_ref")
+	@ContainedIn
+	private PurchaseOrderEntity purchaseOrderRef;
+	 
+	@ManyToOne
+	@JoinColumn(name="sku_ref")
+	@ContainedIn
 	private ProductSkuEntity skuRef;
 
 	@Column(name="sku_code", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+        @Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+    })
 	private String skuCode;
 
 	@Column(name="prod_desc")
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.YES)
+    @Fields({
+        @Field(index=Index.YES, store=Store.NO, analyze=Analyze.YES)
+    })
 	private String prodDesc;
 
 	@Column(name="quantity")
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+        @Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+    })
 	private float quantity;
 
 	@Column(name="uom")
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+        @Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+    })
 	private String uom;
 	
 	@Column(name="unit_rate")
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+        @Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+    })
 	private String unitRate;
 
 	@Column(name="rate_variance")
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+        @Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+    })
 	private float rateVariance;
 	
 	@Column(name="warranty_terms")
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.YES)
+	@Fields({
+        @Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+    })
 	private float warrantyTerms;
 	
 	@Embedded
@@ -158,6 +190,20 @@ public class PurchaseOrderLineEntity implements Serializable {
 	 */
 	public void setLineType(PoLineType lineType) {
 		this.lineType = lineType;
+	}
+
+	/**
+	 * @return the purchaseOrderRef
+	 */
+	public PurchaseOrderEntity getPurchaseOrderRef() {
+		return purchaseOrderRef;
+	}
+
+	/**
+	 * @param purchaseOrderRef the purchaseOrderRef to set
+	 */
+	public void setPurchaseOrderRef(PurchaseOrderEntity purchaseOrderRef) {
+		this.purchaseOrderRef = purchaseOrderRef;
 	}
 
 	/**

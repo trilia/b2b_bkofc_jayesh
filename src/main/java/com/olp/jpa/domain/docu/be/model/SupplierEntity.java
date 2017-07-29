@@ -1,5 +1,6 @@
 package com.olp.jpa.domain.docu.be.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,12 +53,13 @@ import com.olp.jpa.domain.docu.ut.model.EmployeeBean;
 @FullTextFilterDef(name="filter-suppliers", impl=TenantBasedSearchFilterFactory.class)
 @MultiTenant(level = MultiTenant.Levels.ONE_TENANT)
 @SortCriteria(attributes={"supplierCode"})
-public class SupplierEntity {
+public class SupplierEntity implements Serializable {
 	
+	private static final long serialVersionUID = 2631709848014113815L;
+
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="partner_id", nullable=false)
-	@Field(index=Index.NO, store=Store.NO, analyze=Analyze.NO)
 	private Long id;
 	
 	@KeyAttribute
@@ -75,6 +77,8 @@ public class SupplierEntity {
 	private String supplierName;
 	
 	@Column(name="legal_info", nullable=false)
+	@Embedded
+	@IndexedEmbedded
 	private List<LegalInfoBean> legalInfo;
 	
 	@Embedded
@@ -82,6 +86,7 @@ public class SupplierEntity {
 	private RevisionControlBean revisionControl;
 	
 	@OneToMany(mappedBy="locationCode_ref", cascade={javax.persistence.CascadeType.ALL})
+	@IndexedEmbedded(includeEmbeddedObjectId=true, depth=1)
 	private List<SupplierLocationEntity> supplierLocations;
 
 	/**

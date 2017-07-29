@@ -1,5 +1,6 @@
 package com.olp.jpa.domain.docu.be.model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,8 +22,10 @@ import com.olp.jpa.domain.docu.org.model.LocationEntity;
 @XmlAccessorType(XmlAccessType.FIELD)
 //@XmlAccessorOrder(value=XmlAccessOrder.UNDEFINED)
 @XmlType(propOrder={"id", "supplierCode", "supplierName","legalInfo", "revisionControl", "supplierLocations"})
-public class SupplierLocation {
+public class SupplierLocation  implements Serializable {
 	
+	private static final long serialVersionUID = -576900023984334870L;
+
 	@XmlElement(name="partner-id")
     private Long id;
     
@@ -168,7 +171,6 @@ public SupplierLocationEntity convertTo(int mode) {
         bean.setShippingLocation(this.isShippingLocation);
         bean.setBillingLocation(this.isBillingLocation);
         bean.setLocation(location);
-        
         
         if (this.bankAccounts != null) {
             ArrayList<BankAccountEntity> bankAccountList = new ArrayList<>();

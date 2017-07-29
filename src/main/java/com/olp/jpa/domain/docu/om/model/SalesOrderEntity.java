@@ -1,7 +1,7 @@
 package com.olp.jpa.domain.docu.om.model;
 
-import java.sql.Date;
-import java.util.ArrayList;
+import java.io.Serializable;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Embedded;
@@ -11,11 +11,15 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.Table;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 import org.hibernate.search.annotations.Analyze;
+import org.hibernate.search.annotations.ContainedIn;
 import org.hibernate.search.annotations.Field;
 import org.hibernate.search.annotations.FullTextFilterDef;
 import org.hibernate.search.annotations.Index;
@@ -28,9 +32,6 @@ import com.olp.annotations.MultiTenant;
 import com.olp.annotations.SortCriteria;
 import com.olp.jpa.common.RevisionControlBean;
 import com.olp.jpa.common.TenantBasedSearchFilterFactory;
-import com.olp.jpa.domain.docu.be.model.LegalInfoBean;
-import com.olp.jpa.domain.docu.be.model.Supplier;
-import com.olp.jpa.domain.docu.be.model.SupplierLocationEntity;
 import com.olp.jpa.domain.docu.cs.model.CustomerEntity;
 
 /**
@@ -41,15 +42,16 @@ import com.olp.jpa.domain.docu.cs.model.CustomerEntity;
 @Table(name="trl_sales_orders", uniqueConstraints={@javax.persistence.UniqueConstraint(columnNames={"tenant_id", "order_number"})})
 @Indexed(index="SetupDataIndex")
 @FullTextFilterDef(name="filter-salesorder", impl=TenantBasedSearchFilterFactory.class)
-@NamedQueries({@javax.persistence.NamedQuery(name="SalesOrder.findByOrderNumber", query="SELECT t from SalesOrderEntity t WHERE t.orderNumber = :orderNumber and t.partNumber = :partNumber ")})
+@NamedQueries({@javax.persistence.NamedQuery(name="SalesOrder.findByOrderNumber", query="SELECT t from SalesOrderEntity t WHERE t.orderNumber = :orderNumber and t.orderPart = :partNumber and t.tenantId = :tenant")})
 @MultiTenant(level=MultiTenant.Levels.ONE_TENANT)
 @SortCriteria(attributes={"orderNumber"})
-public class SalesOrderEntity {
+public class SalesOrderEntity implements Serializable {
+
+	private static final long serialVersionUID = -2195457661876745924L;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
 	@Column(name="order_id", nullable=false)
-	@Field(index=Index.NO, store=Store.NO, analyze=Analyze.NO)
 	private Long id;
 	
 	@KeyAttribute
@@ -68,6 +70,7 @@ public class SalesOrderEntity {
 	
 	@Column(name="order_date", nullable=false)
 	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Temporal(TemporalType.DATE)
 	private Date orderDate;
 	
 	@Column(name="order_source", nullable=false)
@@ -87,6 +90,7 @@ public class SalesOrderEntity {
 	
 	@Column(name="deliver-by-date", nullable=false)
 	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Temporal(TemporalType.DATE)
 	private Date deliverByDate;
 	
 	@Column(name="order_status", nullable=false)
@@ -94,16 +98,18 @@ public class SalesOrderEntity {
 	@Enumerated(EnumType.STRING)
 	private OrderEnums.OrderStatus orderStatus;
 	
-	@Column(name="parent_order_ref", nullable=false)
 	@ManyToOne
+	@JoinColumn(name="parent_order_ref")
+	@ContainedIn
 	private SalesOrderEntity parentOrderRef;
 	
 	@Column(name="parent_order_num", nullable=false)
 	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
 	private String parentOrderNum;
 	
-	@Column(name="customer_ref", nullable=false)
 	@ManyToOne
+	@JoinColumn(name="customer_ref")
+	@ContainedIn
 	private CustomerEntity customerRef;
 	
 	@Column(name="customer_code", nullable=false)
@@ -358,7 +364,7 @@ public class SalesOrderEntity {
 		bean.setDeliverByDate(deliverByDate);
 		bean.setOrderStatus(orderStatus);
 		bean.setParentOrderRef(parentOrderRef.getOrderNumber());
-		//bean.setCustomerRef(customerRef);
+		bean.setCustomerRef(customerRef.getCustomerCode());
 		bean.setShippingAddress(shippingAddress);
 		
 		if (mode <= 0) {

@@ -3,21 +3,13 @@
  */
 package com.olp.jpa.domain.docu.po.repo;
 
-import java.util.List;
-
 import javax.persistence.TypedQuery;
 
-import org.springframework.data.domain.Example;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
 
 import com.olp.fwk.common.ContextManager;
 import com.olp.fwk.common.IContext;
 import com.olp.jpa.common.AbstractRepositoryImpl;
-import com.olp.jpa.common.SearchCriteriaBean;
-import com.olp.jpa.domain.docu.po.model.PurchaseOrderEntity;
 import com.olp.jpa.domain.docu.po.model.PurchaseOrderLineEntity;
 
 /**
