@@ -11,6 +11,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -19,6 +20,7 @@ import javax.persistence.UniqueConstraint;
 
 import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Fields;
 import org.hibernate.search.annotations.FullTextFilterDef;
 import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
@@ -38,7 +40,7 @@ import com.olp.jpa.domain.docu.inv.model.ProductSkuEntity;
  */
 
 @Entity
-@Table(name="salesOrderLine", uniqueConstraints=@UniqueConstraint(columnNames={"tenant_id", "order_number"}))
+@Table(name="trl_sales_order_lines", uniqueConstraints=@UniqueConstraint(columnNames={"tenant_id", "order_number"}))
 @NamedQueries({
 		@NamedQuery(name="SalesOrderLine.findByOrderLineNumber", query="SELECT t from SalesOrderLineEntity t WHERE t.orderNumber = :orderNumber and t.partNumber = :partNumber and t.lineNumber = :lineNumber")
 		})
@@ -57,64 +59,90 @@ public class SalesOrderLineEntity implements Serializable {
 	private Long id;
 	
 	@KeyAttribute
-	@Field(store=Store.YES, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.NO, store=Store.YES, analyze=Analyze.NO)
+	})
 	@Column(name="tenant_id", nullable=false)
 	private Long tenantId;
 	
 	@KeyAttribute
 	@Column(name="order_number", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.YES, analyze=Analyze.NO)
+	})
 	private String orderNumber;
 	
 	@KeyAttribute
 	@Column(name="part_number", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.YES, analyze=Analyze.NO)
+	})
 	private int partNumber;
 
 	@Column(name="line_number", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.YES, analyze=Analyze.NO)
+	})
 	private int lineNumber;
 	
 	@Column(name="line_type", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.YES, analyze=Analyze.NO)
+	})
 	@Enumerated(EnumType.STRING)
 	private OrderEnums.OrderLineType lineType;
 	
-	@Column(name="order_ref", nullable=false)
+	@JoinColumn(name="order_ref")
+	@IndexedEmbedded(includeEmbeddedObjectId=true, depth=1)
 	@ManyToOne
 	private SalesOrderEntity orderRef;
 	
-	@Column(name="product_sku_ref", nullable=false)
+	@JoinColumn(name="product_sku_ref")
+	@IndexedEmbedded(includeEmbeddedObjectId=true, depth=1)
 	@ManyToOne
 	private ProductSkuEntity productSkuRef;
 	
 	@Column(name="product_sku_code", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.YES, analyze=Analyze.NO)
+	})
 	private String productSkuCode;
 
 	@Column(name="order_quantity")
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.YES, analyze=Analyze.NO)
+	})
 	private float orderQuantity;
 	
 	@Column(name="uom")
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.YES, analyze=Analyze.NO)
+	})
 	private String uom;
 	
 	@Column(name="unit_rate")
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.YES, analyze=Analyze.NO)
+	})
 	private float unitRate;
 	
 	@Column(name="line_status", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.YES, analyze=Analyze.NO)
+	})
 	@Enumerated(EnumType.STRING)
 	private OrderEnums.OrderLineStatus lineStatus;
 	
 	@Column(name="return_status", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.YES, analyze=Analyze.NO)
+	})
 	private boolean returnStatus;
 	
 	@Column(name="return_quantity", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.YES, analyze=Analyze.NO)
+	})
 	private float returnQuantity;
 	
 	@Embedded

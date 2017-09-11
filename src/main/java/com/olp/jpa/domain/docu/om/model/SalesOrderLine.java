@@ -1,52 +1,18 @@
 package com.olp.jpa.domain.docu.om.model;
 
 import java.io.Serializable;
-import java.lang.Long;
-import java.lang.String;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
-import javax.persistence.*;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 
-import org.hibernate.search.annotations.Analyze;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.FullTextFilterDef;
-import org.hibernate.search.annotations.Index;
-import org.hibernate.search.annotations.Indexed;
-import org.hibernate.search.annotations.IndexedEmbedded;
-import org.hibernate.search.annotations.Store;
-
-import com.olp.annotations.KeyAttribute;
-import com.olp.annotations.MultiTenant;
-import com.olp.annotations.SortCriteria;
 import com.olp.jpa.common.RevisionControlBean;
-import com.olp.jpa.common.TenantBasedSearchFilterFactory;
-import com.olp.jpa.domain.docu.be.model.LegalInfoBean;
-import com.olp.jpa.domain.docu.be.model.Supplier;
-import com.olp.jpa.domain.docu.be.model.SupplierEntity;
-import com.olp.jpa.domain.docu.be.model.SupplierLocationEntity;
-import com.olp.jpa.domain.docu.cs.model.CustomerEntity;
 import com.olp.jpa.domain.docu.inv.model.ProductSkuEntity;
-import com.olp.jpa.domain.docu.org.model.LocationEntity;
 
 /**
  * Entity implementation class for Entity: SalesOrderLineEntity
  *
  */
 
-@Entity
-@Table(name="salesOrderLine", uniqueConstraints=@UniqueConstraint(columnNames={"tenant_id", "order_number"}))
-@NamedQueries({
-		@NamedQuery(name="SalesOrderLine.findByOrderLineNumber", query="SELECT t from SalesOrderLineEntity t WHERE t.orderNumber = :orderNumber and t.partNumber = :partNumber and t.lineNumber = :lineNumber")
-		})
-@Cacheable(true)
-@Indexed(index="SetupDataIndex")
-@FullTextFilterDef(name="filter-salesOrderLine", impl=TenantBasedSearchFilterFactory.class)
-@MultiTenant(level = MultiTenant.Levels.ONE_TENANT)
-@SortCriteria(attributes={"lineNumber"})
 public class SalesOrderLine implements Serializable {
 
 	private static final long serialVersionUID = 1L;

@@ -15,6 +15,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -26,7 +27,9 @@ import javax.persistence.TemporalType;
 import javax.persistence.UniqueConstraint;
 
 import org.hibernate.search.annotations.Analyze;
+import org.hibernate.search.annotations.ContainedIn;
 import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Fields;
 import org.hibernate.search.annotations.FullTextFilterDef;
 import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
@@ -69,94 +72,130 @@ public class CustomerInvoiceEntity implements Serializable {
 	private Long id;
 	
 	@KeyAttribute
-	@Field(store=Store.YES, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	})
 	@Column(name="tenant_id", nullable=false)
 	private Long tenantId;
 	
 	@KeyAttribute
 	@Column(name="invoice_number", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	})
 	private String invoiceNumber;
 
 	@Column(name="invoice_date", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	})
 	@Temporal(TemporalType.DATE)
 	private Date invoiceDate;
 	
 	@Column(name="invoice_type", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	})
 	@Enumerated(EnumType.STRING)
 	private FinEnums.CustInvoiceType invoiceType;
 
 	@Column(name="payment_term", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	})
 	@Enumerated(EnumType.STRING)
 	private FinEnums.PaymentTerm paymentTerm;
 
-	@Column(name="customer_ref", nullable=false)
+	@JoinColumn(name="customer_ref")
+	@IndexedEmbedded(includeEmbeddedObjectId=true, depth=1)
 	@ManyToOne
 	private CustomerEntity customerRef;
 	
 	@Column(name="customer_code", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	})
 	private String customerCode;
 
 	@Column(name="billing_address", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	})
 	private String billingAddress;
 
-	@Column(name="order_ref", nullable=false)
 	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name="order_ref")
+	@IndexedEmbedded
 	private SalesOrderEntity orderRef;
 	
 	@Column(name="order_number", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	})
 	private String orderNumber;
 	
-	@Column(name="tax_group_ref", nullable=false)
+	@JoinColumn(name="tax_group_ref")
+	@ContainedIn
 	@ManyToOne
 	private TaxGroupEntity taxGroupRef;
 	
 	@Column(name="tax_group_code", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	})
 	private String taxGroupCode;
 	
 	@Column(name="invoice_currency", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	})
 	private String invoiceCurrency;
 	
-	@Column(name="promo_group_ref", nullable=false)
 	@ManyToOne
+	@JoinColumn(name="promo_group_ref")
+	@ContainedIn
 	private PromotionGroupEntity promoGroupRef;
 	
 	@Column(name="promo_group_code", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	})
 	private String promoGroupCode;
 	
 	@Column(name="base_total_amount", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	})
 	private float baseTotalAmount;
 	
 	@Column(name="disc_total_amount", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	})
 	private float discTotalAmount;
 	
 	@Column(name="net_total_amount", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	})
 	private float netTotalAmount;
 	
 	@Column(name="tax_total_amount", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	})
 	private float taxTotalAmount;
 	
 	@Column(name="invoice_total_amount", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	})
 	private float invoiceTotalAmount;
 
-	@OneToMany(mappedBy="custInvoiceRef", cascade={javax.persistence.CascadeType.PERSIST})
+	@OneToMany(mappedBy="invoiceRef", cascade={javax.persistence.CascadeType.PERSIST})
 	private List<CustomerInvoiceLineEntity> invoiceLines;
 
-	@OneToMany(mappedBy="custPaymentRef", cascade={javax.persistence.CascadeType.PERSIST})
+	@OneToMany(mappedBy="invoiceRef", cascade={javax.persistence.CascadeType.PERSIST})
 	private List<CustomerPaymentEntity> payments;
 	
 	@Embedded

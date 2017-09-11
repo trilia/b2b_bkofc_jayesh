@@ -3,6 +3,7 @@ package com.olp.jpa.domain.docu.po.repo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.olp.fwk.common.error.EntityValidationException;
@@ -20,6 +21,7 @@ import com.olp.jpa.domain.docu.po.model.PurchaseOrderEntity;
  * @author Jayesh
  *
  */
+@Service("purchaseOrderService")
 public class PurchaseOrderServiceImpl extends AbstractServiceImpl<PurchaseOrderEntity, Long> implements PurchaseOrderService {
 
 	 @Autowired

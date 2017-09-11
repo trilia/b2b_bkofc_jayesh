@@ -15,6 +15,7 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
@@ -25,6 +26,7 @@ import javax.persistence.UniqueConstraint;
 
 import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Fields;
 import org.hibernate.search.annotations.FullTextFilterDef;
 import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
@@ -43,7 +45,7 @@ import com.olp.jpa.common.TenantBasedSearchFilterFactory;
  */
 
 @Entity
-@Table(name="trl_customer_payments", uniqueConstraints=@UniqueConstraint(columnNames={"tenant_id", "invoice_line_number"}))
+@Table(name="trl_customer_payments", uniqueConstraints=@UniqueConstraint(columnNames={"tenant_id", "payment_number"}))
 @NamedQueries({
 		@NamedQuery(name="CustomerPayment.findbyPaymentNum", query="SELECT t from CustomerPaymentEntity t WHERE t.paymentNumber = :paymentNumber")
 		})
@@ -51,7 +53,7 @@ import com.olp.jpa.common.TenantBasedSearchFilterFactory;
 @Indexed(index="SetupDataIndex")
 @FullTextFilterDef(name="filter-customerpayment", impl=TenantBasedSearchFilterFactory.class)
 @MultiTenant(level = MultiTenant.Levels.ONE_TENANT)
-@SortCriteria(attributes={"invoiceLineNumber"})
+@SortCriteria(attributes={"paymentNumber"})
 public class CustomerPaymentEntity implements Serializable {
 	
 	/**
@@ -65,51 +67,72 @@ public class CustomerPaymentEntity implements Serializable {
 	private Long id;
 	
 	@KeyAttribute
-	@Field(store=Store.YES, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	})
 	@Column(name="tenant_id", nullable=false)
 	private Long tenantId;
 	
 	@KeyAttribute
 	@Column(name="payment_number", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	})
 	private String paymentNumber;
 	
 	@Column(name="payment_method", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	})
 	@Enumerated(EnumType.STRING)
 	private FinEnums.PaymentMethod paymentMethod;
 
 	@Column(name="transaction_ref", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	})
 	private String transactionRef;
 
 	@Column(name="description", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	})
 	private String description;
 
 	@Column(name="payment_date", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	})
 	@Temporal(TemporalType.DATE)
 	private Date paymentDate;
 
 	@Column(name="amount", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	})
 	private float amount;
 
 	@Column(name="currency", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	})
 	private String currency;
 	
-	@Column(name="invoice_ref", nullable=false)
 	@ManyToOne
+	@JoinColumn(name="invoice_ref")
+	@IndexedEmbedded(includeEmbeddedObjectId=true, depth=1)
 	private CustomerInvoiceEntity invoiceRef;
 
 	@Column(name="invoice_number", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	})
 	private String invoiceNumber;
 
 	@Column(name="customer_number", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	})
 	private String customerNumber;
 
 	@Embedded

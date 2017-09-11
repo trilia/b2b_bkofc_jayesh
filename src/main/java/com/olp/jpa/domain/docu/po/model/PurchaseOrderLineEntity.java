@@ -1,13 +1,20 @@
 package com.olp.jpa.domain.docu.po.model;
 
 import java.io.Serializable;
-import java.lang.Long;
-import java.lang.String;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
-import javax.persistence.*;
+import javax.persistence.Cacheable;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.ContainedIn;
@@ -24,12 +31,7 @@ import com.olp.annotations.MultiTenant;
 import com.olp.annotations.SortCriteria;
 import com.olp.jpa.common.RevisionControlBean;
 import com.olp.jpa.common.TenantBasedSearchFilterFactory;
-import com.olp.jpa.domain.docu.be.model.LegalInfoBean;
-import com.olp.jpa.domain.docu.be.model.Supplier;
-import com.olp.jpa.domain.docu.be.model.SupplierEntity;
-import com.olp.jpa.domain.docu.be.model.SupplierLocationEntity;
 import com.olp.jpa.domain.docu.inv.model.ProductSkuEntity;
-import com.olp.jpa.domain.docu.org.model.LocationEntity;
 
 /**
  * Entity implementation class for Entity: PurchaseOrderEntity
@@ -37,7 +39,7 @@ import com.olp.jpa.domain.docu.org.model.LocationEntity;
  */
 
 @Entity
-@Table(name="purchaseOrderLine", uniqueConstraints=@UniqueConstraint(columnNames={"tenant_id", "po_number", "line_number"}))
+@Table(name="trl_purchase_order_lines", uniqueConstraints=@UniqueConstraint(columnNames={"tenant_id", "po_number", "line_number"}))
 @NamedQueries({
 		@NamedQuery(name="PurchaseOrderLine.findByPurchaseOrderNumber", query="SELECT t from PurchaseOrderLineEntity t WHERE t.poNumber = :poNumber and t.lineNumber = :line and t.tenantId = :tenant")
 		})
@@ -56,7 +58,9 @@ public class PurchaseOrderLineEntity implements Serializable {
 	private Long id;
 	
 	@KeyAttribute
-	@Field(store=Store.YES, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.NO, store=Store.YES, analyze=Analyze.NO)
+	})
 	@Column(name="tenant_id", nullable=false)
 	private Long tenantId;
 	

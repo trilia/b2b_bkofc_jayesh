@@ -1,4 +1,4 @@
-package com.olp.jpa.domain.docu.fin.model.repo;
+package com.olp.jpa.domain.docu.fin.repo;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package com.olp.jpa.domain.docu.fin.model.repo;
+package com.olp.jpa.domain.docu.fin.repo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -47,6 +47,7 @@ public class CustomerInvoiceLineServiceImpl extends AbstractServiceImpl<Customer
 	protected AbstractServiceImpl<CustomerInvoiceLineEntity, Long>.Outcome preProcess(int opCode,
 			CustomerInvoiceLineEntity entity) throws EntityValidationException {
 		Outcome result = new Outcome();
+		result.setResult(Boolean.TRUE);
         switch(opCode) {
             
             case ADD : {
@@ -77,8 +78,6 @@ public class CustomerInvoiceLineServiceImpl extends AbstractServiceImpl<Customer
 		AbstractServiceImpl<CustomerInvoiceLineEntity, Long>.Outcome result = new AbstractServiceImpl.Outcome();
 		result.setResult(true);
 
-		switch (opCode) {
-		}
 		return result;
 	}
 

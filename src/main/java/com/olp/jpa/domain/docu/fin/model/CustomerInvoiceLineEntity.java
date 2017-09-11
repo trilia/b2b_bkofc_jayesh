@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import javax.persistence.Cacheable;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -20,6 +21,7 @@ import javax.persistence.UniqueConstraint;
 
 import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Fields;
 import org.hibernate.search.annotations.FullTextFilterDef;
 import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
@@ -42,7 +44,7 @@ import com.olp.jpa.domain.docu.om.model.SalesOrderLineEntity;
 @Entity
 @Table(name="trl_customer_invoice_lines", uniqueConstraints=@UniqueConstraint(columnNames={"tenant_id", "invoice_line_number"}))
 @NamedQueries({
-		@NamedQuery(name="CustomerInvoice.findbyInvoiceNumber", query="SELECT t from CustomerInvoiceLineEntity t WHERE t.invoiceNumber = :invoiceNumber and t.invoiceLineNumber = :invoiceLineNumber")
+		@NamedQuery(name="CustomerInvoiceLine.findbyInvoiceLine", query="SELECT t from CustomerInvoiceLineEntity t WHERE t.invoiceNumber = :invoiceNumber and t.invoiceLineNumber = :invoiceLineNumber")
 		})
 @Cacheable(true)
 @Indexed(index="SetupDataIndex")
@@ -59,85 +61,121 @@ public class CustomerInvoiceLineEntity implements Serializable {
 	private Long id;
 	
 	@KeyAttribute
-	@Field(store=Store.YES, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	})
 	@Column(name="tenant_id", nullable=false)
 	private Long tenantId;
 	
 	@KeyAttribute
 	@Column(name="invoice_line_number", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	})
 	private int invoiceLineNumber;
 	
 	@ManyToOne
 	@JoinColumn(name="invoice_ref")
+	@IndexedEmbedded(includeEmbeddedObjectId=true, depth=1)
 	private CustomerInvoiceEntity invoiceRef;
 	
 	@Column(name="invoice_number", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	})
 	private String invoiceNumber;
 
-	@Column(name="order_line_ref", nullable=false)
-	@OneToOne
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name="order_line_ref")
+	@IndexedEmbedded
 	private SalesOrderLineEntity orderLineRef;
 	
 	@Column(name="order_line_number", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	})
 	private int orderLineNumber;
 	
 	@Column(name="line_description", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	})
 	private String lineDescription;
 	
 	@Column(name="quantity", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	})
 	private float quantity;
 	
 	@Column(name="uom", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	})
 	private String uom;
 	
 	@Column(name="list_price", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	})
 	private float listPrice;
 	
 	@Column(name="unit_price", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	})
 	private float unitPrice;
 	
-	@Column(name="tax_group_ref", nullable=false)
 	@ManyToOne
+	@JoinColumn(name="tax_group_ref")
+	@IndexedEmbedded(includeEmbeddedObjectId=true, depth=1)
 	private TaxGroupEntity taxGroupRef;
 	
 	@Column(name="tax_group_code", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	})
 	private String taxGroupCode;
 	
-	@Column(name="promo_group_ref", nullable=false)
 	@ManyToOne
+	@JoinColumn(name="promo_group_ref")
+	@IndexedEmbedded(includeEmbeddedObjectId=true, depth=1)
 	private PromotionGroupEntity promoGroupRef;
 	
 	@Column(name="promo_group_code", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	})
 	private String promoGroupCode;
 	
 	@Column(name="base_amount", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	})
 	private float baseAmount;
 	
 	@Column(name="discount_amount", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	})
 	private float discountAmount;
 	
 	@Column(name="net_amount", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	})
 	private float netAmount;
 	
 	@Column(name="tax_amount", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	})
 	private float taxAmount;
 	
 	@Column(name="line_total_amount", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	})
 	private float lineTotalAmount;
 	
 	@Embedded

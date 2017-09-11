@@ -63,17 +63,23 @@ public class SupplierEntity implements Serializable {
 	private Long id;
 	
 	@KeyAttribute
-	@Field(index=Index.NO,store=Store.YES, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.NO, store=Store.YES, analyze=Analyze.NO)
+	})
 	@Column(name="tenant_id", nullable=false)
 	private String tenantId;
 	
 	@KeyAttribute
 	@Column(name="supplier_code", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	})
 	private String supplierCode;
 	
 	@Column(name="supplier_name", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	})
 	private String supplierName;
 	
 	@Column(name="legal_info", nullable=false)
@@ -85,7 +91,7 @@ public class SupplierEntity implements Serializable {
 	@IndexedEmbedded
 	private RevisionControlBean revisionControl;
 	
-	@OneToMany(mappedBy="locationCode_ref", cascade={javax.persistence.CascadeType.ALL})
+	@OneToMany(mappedBy="supplierRef", cascade={javax.persistence.CascadeType.ALL})
 	@IndexedEmbedded(includeEmbeddedObjectId=true, depth=1)
 	private List<SupplierLocationEntity> supplierLocations;
 

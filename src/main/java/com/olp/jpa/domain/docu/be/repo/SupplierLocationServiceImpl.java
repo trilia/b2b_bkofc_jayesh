@@ -12,10 +12,8 @@ import com.olp.fwk.common.error.EntityValidationException;
 import com.olp.jpa.common.AbstractServiceImpl;
 import com.olp.jpa.common.ITextRepository;
 import com.olp.jpa.domain.docu.be.model.BankAccountEntity;
-import com.olp.jpa.domain.docu.be.model.SupplierEntity;
 import com.olp.jpa.domain.docu.be.model.SupplierLocationEntity;
-import com.olp.jpa.domain.docu.org.model.LocationEntity;
-import com.olp.jpa.domain.docu.po.model.PurchaseOrderEntity;
+import com.olp.jpa.domain.docu.be.service.BankAccountRepository;
 
 /**
  *

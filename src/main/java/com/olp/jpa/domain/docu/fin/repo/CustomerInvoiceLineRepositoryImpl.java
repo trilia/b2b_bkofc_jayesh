@@ -1,4 +1,4 @@
-package com.olp.jpa.domain.docu.fin.model.repo;
+package com.olp.jpa.domain.docu.fin.repo;
 
 import javax.persistence.TypedQuery;
 
@@ -21,7 +21,7 @@ public class CustomerInvoiceLineRepositoryImpl  extends AbstractRepositoryImpl<C
 		IContext ctx = ContextManager.getContext();
         String tid = ctx.getTenantId();
         
-        TypedQuery<CustomerInvoiceLineEntity> query = getEntityManager().createNamedQuery("CustomerInvoice.findbyInvoiceNumber", CustomerInvoiceLineEntity.class);
+        TypedQuery<CustomerInvoiceLineEntity> query = getEntityManager().createNamedQuery("CustomerInvoiceLine.findbyInvoiceLine", CustomerInvoiceLineEntity.class);
         query.setParameter("invoiceNumber", invoiceNumber);
         query.setParameter("invoiceLineNumber", lineNumber); 
         

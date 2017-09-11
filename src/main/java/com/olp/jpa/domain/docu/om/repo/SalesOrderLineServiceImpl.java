@@ -1,22 +1,22 @@
 package com.olp.jpa.domain.docu.om.repo;
 
-import org.hibernate.sql.Update;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Service;
 
 import com.olp.fwk.common.error.EntityValidationException;
 import com.olp.jpa.common.AbstractServiceImpl;
 import com.olp.jpa.common.ITextRepository;
 import com.olp.jpa.domain.docu.om.model.OrderEnums;
 import com.olp.jpa.domain.docu.om.model.OrderEnums.OrderLineStatus;
-import com.olp.jpa.domain.docu.om.model.SalesOrderEntity;
 import com.olp.jpa.domain.docu.om.model.SalesOrderLineEntity;
 
 /**
  * @author Jayesh
  *
  */
+@Service("salesOrderLineService")
 public class SalesOrderLineServiceImpl extends AbstractServiceImpl<SalesOrderLineEntity,Long> implements SalesOrderLineService {
 
 	@Autowired

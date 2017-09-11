@@ -1,4 +1,4 @@
-package com.olp.jpa.domain.docu.fin.model.repo;
+package com.olp.jpa.domain.docu.fin.repo;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;

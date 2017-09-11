@@ -27,6 +27,7 @@ import javax.persistence.UniqueConstraint;
 import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.ContainedIn;
 import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Fields;
 import org.hibernate.search.annotations.FullTextFilterDef;
 import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
@@ -48,7 +49,7 @@ import com.olp.jpa.domain.docu.org.model.LocationEntity;
  */
 
 @Entity
-@Table(name="purchaseOrder", uniqueConstraints=@UniqueConstraint(columnNames={"tenant_id", "po_number"}))
+@Table(name="trl_purchase_orders", uniqueConstraints=@UniqueConstraint(columnNames={"tenant_id", "po_number"}))
 @NamedQueries({
 		@NamedQuery(name="PurchaseOrder.findByPurchaseOrder", query="SELECT t from PurchaseOrderEntity t WHERE t.poNumber = :poNumber and t.tenantId = :tenant"),
 		@NamedQuery(name="PurchaseOrder.findByStatus", query="SELECT t from PurchaseOrderEntity t WHERE t.status = :name and t.tenantId = :tenant")
@@ -68,36 +69,50 @@ public class PurchaseOrderEntity implements Serializable {
 	private Long id;
 	
 	@KeyAttribute
-	@Field(index=Index.YES,store=Store.YES, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.NO, store=Store.YES, analyze=Analyze.NO)
+	})
 	@Column(name="tenant_id", nullable=false)
 	private Long tenantId;
 	
 	@KeyAttribute
 	@Column(name="po_number", nullable=false)
-	@Field(index=Index.YES, store=Store.YES, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.YES, analyze=Analyze.NO)
+	})
 	private String poNumber;
 	
 	@Column(name="po_date", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.YES, analyze=Analyze.NO)
+	})
 	@Temporal(TemporalType.DATE)
 	private Date poDate;
 	
 	@Column(name="description", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.YES)
+	@Fields({
+		@Field(index=Index.YES, store=Store.YES, analyze=Analyze.NO)
+	})
 	private String description;
 
 	@Column(name="po_type", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.YES, analyze=Analyze.NO)
+	})
 	@Enumerated(EnumType.STRING)
 	private PoType poType;
 
 	@Column(name="fulfillment_date")
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.YES, analyze=Analyze.NO)
+	})
 	@Temporal(TemporalType.DATE)
 	private Date fulfillmentDate;
 
 	@Column(name="status")
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.YES, analyze=Analyze.NO)
+	})
 	private String status;
 	
 	@OneToMany(mappedBy="purchaseOrderRef", cascade=CascadeType.ALL)
@@ -105,15 +120,21 @@ public class PurchaseOrderEntity implements Serializable {
     private List<PurchaseOrderLineEntity> poLines;
 
 	@Column(name="pay_terms")
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.YES)
+	@Fields({
+		@Field(index=Index.YES, store=Store.YES, analyze=Analyze.NO)
+	})
 	private String payTerms;
 	
 	@Column(name="freight_terms")
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.YES)
+	@Fields({
+		@Field(index=Index.YES, store=Store.YES, analyze=Analyze.NO)
+	})
 	private String freightTerms;
 
 	@Column(name="other_terms")
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.YES)
+	@Fields({
+		@Field(index=Index.YES, store=Store.YES, analyze=Analyze.NO)
+	})
 	private String otherTerms;
 	
 	@ManyToOne
@@ -122,7 +143,9 @@ public class PurchaseOrderEntity implements Serializable {
 	private SupplierEntity supplierRef;
 	
 	@Column(name="supplier_code")
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.YES, analyze=Analyze.NO)
+	})
 	private String supplierCode;
 
 	@ManyToOne
@@ -131,7 +154,9 @@ public class PurchaseOrderEntity implements Serializable {
 	private SupplierLocationEntity supplierLocRef;
 	
 	@Column(name="location_code")
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.YES, analyze=Analyze.NO)
+	})
 	private String locationCode;
 
 	@ManyToOne

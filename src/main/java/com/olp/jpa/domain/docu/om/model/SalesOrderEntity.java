@@ -21,6 +21,7 @@ import javax.persistence.TemporalType;
 import org.hibernate.search.annotations.Analyze;
 import org.hibernate.search.annotations.ContainedIn;
 import org.hibernate.search.annotations.Field;
+import org.hibernate.search.annotations.Fields;
 import org.hibernate.search.annotations.FullTextFilterDef;
 import org.hibernate.search.annotations.Index;
 import org.hibernate.search.annotations.Indexed;
@@ -55,46 +56,64 @@ public class SalesOrderEntity implements Serializable {
 	private Long id;
 	
 	@KeyAttribute
-	@Field(index=Index.NO,store=Store.YES, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.NO, store=Store.YES, analyze=Analyze.NO)
+	})
 	@Column(name="tenant_id", nullable=false)
 	private String tenantId;
 	
 	@KeyAttribute
 	@Column(name="order_number", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.YES, analyze=Analyze.NO)
+	})
 	private String orderNumber;
 	
 	@Column(name="order_part", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.YES, analyze=Analyze.NO)
+	})
 	private int orderPart;
 	
 	@Column(name="order_date", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.YES, analyze=Analyze.NO)
+	})
 	@Temporal(TemporalType.DATE)
 	private Date orderDate;
 	
 	@Column(name="order_source", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.YES, analyze=Analyze.NO)
+	})
 	@Enumerated(EnumType.STRING)
 	private OrderEnums.OrderSource orderSource;
 	
 	@Column(name="order_type", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.YES, analyze=Analyze.NO)
+	})
 	@Enumerated(EnumType.STRING)
 	private OrderEnums.OrderType orderType;
 	
 	@Column(name="delivery_type", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.YES, analyze=Analyze.NO)
+	})
 	@Enumerated(EnumType.STRING)
 	private OrderEnums.DeliveryType deliveryType;
 	
 	@Column(name="deliver-by-date", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.YES, analyze=Analyze.NO)
+	})
 	@Temporal(TemporalType.DATE)
 	private Date deliverByDate;
 	
 	@Column(name="order_status", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.YES, analyze=Analyze.NO)
+	})
 	@Enumerated(EnumType.STRING)
 	private OrderEnums.OrderStatus orderStatus;
 	
@@ -104,7 +123,9 @@ public class SalesOrderEntity implements Serializable {
 	private SalesOrderEntity parentOrderRef;
 	
 	@Column(name="parent_order_num", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.YES, analyze=Analyze.NO)
+	})
 	private String parentOrderNum;
 	
 	@ManyToOne
@@ -113,11 +134,15 @@ public class SalesOrderEntity implements Serializable {
 	private CustomerEntity customerRef;
 	
 	@Column(name="customer_code", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.YES, analyze=Analyze.NO)
+	})
 	private String customerCode;
 	
 	@Column(name="shipping_Address", nullable=false)
-	@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.YES, analyze=Analyze.NO)
+	})
 	private String shippingAddress;
 	
 	@Embedded

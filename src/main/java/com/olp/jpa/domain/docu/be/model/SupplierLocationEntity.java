@@ -32,10 +32,6 @@ import com.olp.annotations.MultiTenant;
 import com.olp.annotations.SortCriteria;
 import com.olp.jpa.common.RevisionControlBean;
 import com.olp.jpa.common.TenantBasedSearchFilterFactory;
-import com.olp.jpa.domain.docu.be.model.BankAccountEntity;
-import com.olp.jpa.domain.docu.be.model.LegalInfoBean;
-import com.olp.jpa.domain.docu.org.model.Department;
-import com.olp.jpa.domain.docu.org.model.EmployeeAssignmentEntity;
 import com.olp.jpa.domain.docu.org.model.LocationEntity;
 
 /**
@@ -59,13 +55,17 @@ public class SupplierLocationEntity  implements Serializable {
 	private Long id;
 	
 	@KeyAttribute
-	@Field(index=Index.NO,store=Store.YES, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.NO, store=Store.YES, analyze=Analyze.NO)
+	})
 	@Column(name="tenant_id", nullable=false)
 	private String tenantId;
 	
 	@KeyAttribute
 	@Column(name="location_code", nullable=false)
-	@Field(index=Index.YES,store=Store.NO, analyze=Analyze.NO)
+	@Fields({
+		@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
+	})
 	private String locationCode;
 	
 	@Column(name="shipping_location", nullable=false)
