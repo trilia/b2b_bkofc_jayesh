@@ -1,39 +1,9 @@
 package com.olp.jpa.domain.docu.fin.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
-import javax.persistence.Cacheable;
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-
-import org.hibernate.search.annotations.Analyze;
-import org.hibernate.search.annotations.Field;
-import org.hibernate.search.annotations.FullTextFilterDef;
-import org.hibernate.search.annotations.Index;
-import org.hibernate.search.annotations.Indexed;
-import org.hibernate.search.annotations.IndexedEmbedded;
-import org.hibernate.search.annotations.Store;
-
-import com.olp.annotations.KeyAttribute;
-import com.olp.annotations.MultiTenant;
-import com.olp.annotations.SortCriteria;
 import com.olp.jpa.common.RevisionControlBean;
-import com.olp.jpa.common.TenantBasedSearchFilterFactory;
 import com.olp.jpa.domain.docu.mkt.model.PromotionGroupEntity;
-import com.olp.jpa.domain.docu.om.model.SalesOrderEntity;
 import com.olp.jpa.domain.docu.om.model.SalesOrderLineEntity;
 
 /**
@@ -47,7 +17,7 @@ public class CustomerInvoiceLine implements Serializable {
 
 	private Long id;
 	
-	private Long tenantId;
+	private String tenantId;
 
 	private int invoiceLineNumber;
 	
@@ -98,14 +68,14 @@ public class CustomerInvoiceLine implements Serializable {
 	/**
 	 * @return the tenantId
 	 */
-	public Long getTenantId() {
+	public String getTenantId() {
 		return tenantId;
 	}
 
 	/**
 	 * @param tenantId the tenantId to set
 	 */
-	public void setTenantId(Long tenantId) {
+	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
 	}
 

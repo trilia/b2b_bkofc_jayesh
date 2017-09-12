@@ -62,7 +62,7 @@ public class PurchaseOrderLineEntity implements Serializable {
 		@Field(index=Index.NO, store=Store.YES, analyze=Analyze.NO)
 	})
 	@Column(name="tenant_id", nullable=false)
-	private Long tenantId;
+	private String tenantId;
 	
 	@KeyAttribute
 	@Column(name="line_number", nullable=false)
@@ -157,14 +157,14 @@ public class PurchaseOrderLineEntity implements Serializable {
 	/**
 	 * @return the tenantId
 	 */
-	public Long getTenantId() {
+	public String getTenantId() {
 		return tenantId;
 	}
 
 	/**
 	 * @param tenantId the tenantId to set
 	 */
-	public void setTenantId(Long tenantId) {
+	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
 	}
 
@@ -180,6 +180,20 @@ public class PurchaseOrderLineEntity implements Serializable {
 	 */
 	public void setLineNumber(String lineNumber) {
 		this.lineNumber = lineNumber;
+	}
+
+	/**
+	 * @return the poNumber
+	 */
+	public String getPoNumber() {
+		return poNumber;
+	}
+
+	/**
+	 * @param poNumber the poNumber to set
+	 */
+	public void setPoNumber(String poNumber) {
+		this.poNumber = poNumber;
 	}
 
 	/**

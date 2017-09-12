@@ -12,6 +12,7 @@ import com.olp.fwk.common.error.EntityValidationException;
 import com.olp.jpa.common.AbstractServiceImpl;
 import com.olp.jpa.common.ITextRepository;
 import com.olp.jpa.domain.docu.be.model.SupplierEntity;
+import com.olp.jpa.domain.docu.be.service.SupplierLocationRepository;
 
 /**
  *

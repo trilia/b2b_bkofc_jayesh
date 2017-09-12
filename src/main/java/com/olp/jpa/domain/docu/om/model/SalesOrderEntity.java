@@ -2,7 +2,9 @@ package com.olp.jpa.domain.docu.om.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -14,6 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -34,6 +37,7 @@ import com.olp.annotations.SortCriteria;
 import com.olp.jpa.common.RevisionControlBean;
 import com.olp.jpa.common.TenantBasedSearchFilterFactory;
 import com.olp.jpa.domain.docu.cs.model.CustomerEntity;
+import com.olp.jpa.domain.docu.po.model.PurchaseOrderLineEntity;
 
 /**
  * @author Jayesh
@@ -122,7 +126,7 @@ public class SalesOrderEntity implements Serializable {
 	@ContainedIn
 	private SalesOrderEntity parentOrderRef;
 	
-	@Column(name="parent_order_num", nullable=false)
+	@Column(name="parent_order_num")
 	@Fields({
 		@Field(index=Index.YES, store=Store.YES, analyze=Analyze.NO)
 	})
@@ -148,6 +152,10 @@ public class SalesOrderEntity implements Serializable {
 	@Embedded
 	@IndexedEmbedded
 	private RevisionControlBean revisionControl;
+	
+	@OneToMany(mappedBy="orderRef", cascade=CascadeType.ALL)
+    @IndexedEmbedded(includeEmbeddedObjectId=true, depth=1)
+    private List<SalesOrderLineEntity> orderLines;
 
 	/**
 	 * @return the id
@@ -373,6 +381,20 @@ public class SalesOrderEntity implements Serializable {
 		this.revisionControl = revisionControl;
 	}
 	
+	/**
+	 * @return the orderLines
+	 */
+	public List<SalesOrderLineEntity> getOrderLines() {
+		return orderLines;
+	}
+
+	/**
+	 * @param orderLines the orderLines to set
+	 */
+	public void setOrderLines(List<SalesOrderLineEntity> orderLines) {
+		this.orderLines = orderLines;
+	}
+
 	public SalesOrder convertTo(int mode) {
 		SalesOrder bean = new SalesOrder();
 

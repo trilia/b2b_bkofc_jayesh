@@ -14,6 +14,7 @@ import com.olp.jpa.common.ITextRepository;
 import com.olp.jpa.domain.docu.be.model.BankAccountEntity;
 import com.olp.jpa.domain.docu.be.model.SupplierLocationEntity;
 import com.olp.jpa.domain.docu.be.service.BankAccountRepository;
+import com.olp.jpa.domain.docu.be.service.SupplierLocationRepository;
 
 /**
  *
@@ -128,7 +129,6 @@ public class SupplierLocationServiceImpl extends AbstractServiceImpl<SupplierLoc
 	@Override
 	protected SupplierLocationEntity doUpdate(SupplierLocationEntity newEntity, SupplierLocationEntity oldEntity)
 			throws EntityValidationException {
-		// TODO Auto-generated method stub
 		return super.doUpdate(newEntity, oldEntity);
 	}
 

@@ -3,6 +3,7 @@ package com.olp.jpa.domain.docu.po.repo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Service;
 
 import com.olp.fwk.common.error.EntityValidationException;
 import com.olp.jpa.common.AbstractServiceImpl;
@@ -16,6 +17,7 @@ import com.olp.jpa.domain.docu.po.model.PurchaseOrderLineEntity;
  * @author Jayesh
  *
  */
+@Service("purchaseOrderLineService")
 public class PurchaseOrderLineServiceImpl extends AbstractServiceImpl<PurchaseOrderLineEntity,Long> implements PurchaseOrderLineService {
 
 	@Autowired
@@ -62,10 +64,12 @@ public class PurchaseOrderLineServiceImpl extends AbstractServiceImpl<PurchaseOr
             
             case ADD : {
                 preProcessAdd(entity);
+                result.setResult(true);
                 break;
             }
             case ADD_BULK : {
                 preProcessAdd(entity);
+                result.setResult(true);
                 break;
             }
             default: {
@@ -78,6 +82,7 @@ public class PurchaseOrderLineServiceImpl extends AbstractServiceImpl<PurchaseOr
 	}
 
 	private void preProcessAdd(PurchaseOrderLineEntity entity) throws EntityValidationException {
+		entity.setSkuCode(entity.getSkuRef().getSkuCode());
 		validate(entity);
 		updateTenantWithRevision(entity);
 	}
@@ -119,7 +124,7 @@ public class PurchaseOrderLineServiceImpl extends AbstractServiceImpl<PurchaseOr
         
 
 		PurchaseOrderEntity poBean = entity.getPurchaseOrderRef(), poBean2 = null;
-        if (sku != null) {
+        if (poBean != null) {
             Long poId = poBean.getId();
             if (poId == null) {
                 String poNumber = poBean.getPoNumber();

@@ -73,7 +73,7 @@ public class PurchaseOrderEntity implements Serializable {
 		@Field(index=Index.NO, store=Store.YES, analyze=Analyze.NO)
 	})
 	@Column(name="tenant_id", nullable=false)
-	private Long tenantId;
+	private String tenantId;
 	
 	@KeyAttribute
 	@Column(name="po_number", nullable=false)
@@ -190,14 +190,14 @@ public class PurchaseOrderEntity implements Serializable {
 	/**
 	 * @return the tenantId
 	 */
-	public Long getTenantId() {
+	public String getTenantId() {
 		return tenantId;
 	}
 
 	/**
 	 * @param tenantId the tenantId to set
 	 */
-	public void setTenantId(Long tenantId) {
+	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
 	}
 

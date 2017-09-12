@@ -40,7 +40,7 @@ import com.olp.jpa.domain.docu.inv.model.ProductSkuEntity;
  */
 
 @Entity
-@Table(name="trl_sales_order_lines", uniqueConstraints=@UniqueConstraint(columnNames={"tenant_id", "order_number"}))
+@Table(name="trl_sales_order_lines", uniqueConstraints=@UniqueConstraint(columnNames={"tenant_id", "order_number","part_number","line_number"}))
 @NamedQueries({
 		@NamedQuery(name="SalesOrderLine.findByOrderLineNumber", query="SELECT t from SalesOrderLineEntity t WHERE t.orderNumber = :orderNumber and t.partNumber = :partNumber and t.lineNumber = :lineNumber")
 		})
@@ -63,7 +63,7 @@ public class SalesOrderLineEntity implements Serializable {
 		@Field(index=Index.NO, store=Store.YES, analyze=Analyze.NO)
 	})
 	@Column(name="tenant_id", nullable=false)
-	private Long tenantId;
+	private String tenantId;
 	
 	@KeyAttribute
 	@Column(name="order_number", nullable=false)
@@ -79,6 +79,7 @@ public class SalesOrderLineEntity implements Serializable {
 	})
 	private int partNumber;
 
+	@KeyAttribute
 	@Column(name="line_number", nullable=false)
 	@Fields({
 		@Field(index=Index.YES, store=Store.YES, analyze=Analyze.NO)
@@ -169,7 +170,7 @@ public class SalesOrderLineEntity implements Serializable {
 	/**
 	 * @return the tenantId
 	 */
-	public Long getTenantId() {
+	public String getTenantId() {
 		return tenantId;
 	}
 
@@ -177,7 +178,7 @@ public class SalesOrderLineEntity implements Serializable {
 	/**
 	 * @param tenantId the tenantId to set
 	 */
-	public void setTenantId(Long tenantId) {
+	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
 	}
 

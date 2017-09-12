@@ -71,7 +71,7 @@ public class CustomerPaymentEntity implements Serializable {
 		@Field(index=Index.YES, store=Store.NO, analyze=Analyze.NO)
 	})
 	@Column(name="tenant_id", nullable=false)
-	private Long tenantId;
+	private String tenantId;
 	
 	@KeyAttribute
 	@Column(name="payment_number", nullable=false)
@@ -156,14 +156,14 @@ public class CustomerPaymentEntity implements Serializable {
 	/**
 	 * @return the tenantId
 	 */
-	public Long getTenantId() {
+	public String getTenantId() {
 		return tenantId;
 	}
 
 	/**
 	 * @param tenantId the tenantId to set
 	 */
-	public void setTenantId(Long tenantId) {
+	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
 	}
 

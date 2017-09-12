@@ -10,7 +10,7 @@ import com.olp.jpa.domain.docu.inv.model.ChannelInventoryEntity;
  */
 public interface ChannelInventoryService extends IJpaService<ChannelInventoryEntity, Long> {
 
-	//public ChannelInventoryEntity findByChannelCode(String channelCode);
+	public ChannelInventoryEntity findChannelInventoryBySku(String skuCode,String channelCode);
 	
 	public void validate(ChannelInventoryEntity entity) throws EntityValidationException;
 	

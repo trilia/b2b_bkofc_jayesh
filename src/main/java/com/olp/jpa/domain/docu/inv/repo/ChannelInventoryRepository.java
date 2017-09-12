@@ -12,6 +12,6 @@ import com.olp.jpa.domain.docu.sm.model.SalesChannelEntity;
  */
 public interface ChannelInventoryRepository extends JpaRepository<ChannelInventoryEntity, Long>, ITextRepository<ChannelInventoryEntity, Long> { 
 	
-	//public SalesChannelEntity findByChannelCode(String channelCode);
+	public ChannelInventoryEntity findChannelInventoryBySku(String skuCode,String channelCode);
 
 }

@@ -1,4 +1,4 @@
-package com.olp.jpa.domain.docu.be.repo;
+package com.olp.jpa.domain.docu.be.service;
 
 import javax.persistence.TypedQuery;
 

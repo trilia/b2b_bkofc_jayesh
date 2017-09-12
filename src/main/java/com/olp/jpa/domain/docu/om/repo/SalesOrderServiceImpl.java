@@ -8,13 +8,8 @@ import org.springframework.stereotype.Service;
 import com.olp.fwk.common.error.EntityValidationException;
 import com.olp.jpa.common.AbstractServiceImpl;
 import com.olp.jpa.common.ITextRepository;
-import com.olp.jpa.common.AbstractServiceImpl.Outcome;
-import com.olp.jpa.domain.docu.inv.model.ProductSkuEntity;
-import com.olp.jpa.domain.docu.inv.repo.ProductSkuRepository;
 import com.olp.jpa.domain.docu.om.model.OrderEnums;
 import com.olp.jpa.domain.docu.om.model.SalesOrderEntity;
-import com.olp.jpa.domain.docu.po.model.PurchaseOrderLineEntity;
-import com.olp.jpa.domain.docu.po.repo.PurchaseOrderLineRepository;
 
 /**
  * @author Jayesh
@@ -59,10 +54,12 @@ public class SalesOrderServiceImpl extends AbstractServiceImpl<SalesOrderEntity,
             
             case ADD : {
                 preProcessAdd(entity);
+                result.setResult(true);
                 break;
             }
             case ADD_BULK : {
                 preProcessAdd(entity);
+                result.setResult(true);
                 break;
             }
             default: {

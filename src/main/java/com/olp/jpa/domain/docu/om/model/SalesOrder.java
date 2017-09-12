@@ -4,13 +4,16 @@
 package com.olp.jpa.domain.docu.om.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 import com.olp.jpa.common.RevisionControlBean;
 import com.olp.jpa.domain.docu.cs.model.CustomerEntity;
+import com.olp.jpa.domain.docu.fin.model.CustomerPaymentEntity;
 
 /**
  * @author Jayesh
@@ -58,6 +61,9 @@ public class SalesOrder implements Serializable {
 
 	@XmlElement(name="shipping-address")
 	private String shippingAddress;
+	
+	@XmlElement(name="order-lines")
+	private List<String> orderLines;
 	
 	private RevisionControlBean revisionControl;
 
@@ -244,6 +250,20 @@ public class SalesOrder implements Serializable {
 	}
 
 	/**
+	 * @return the orderLines
+	 */
+	public List<String> getOrderLines() {
+		return orderLines;
+	}
+
+	/**
+	 * @param orderLines the orderLines to set
+	 */
+	public void setOrderLines(List<String> orderLines) {
+		this.orderLines = orderLines;
+	}
+
+	/**
 	 * @return the revisionControl
 	 */
 	public RevisionControlBean getRevisionControl() {
@@ -288,6 +308,16 @@ public class SalesOrder implements Serializable {
 			customerBean.setCustomerCode(customerRef);
 			bean.setCustomerRef(customerBean);
 			bean.setCustomerCode(customerBean.getCustomerCode());
+        }
+		
+		if (this.orderLines != null) {
+            ArrayList<SalesOrderLineEntity> soLines = new ArrayList<>();
+            for (String lineNumber : this.orderLines) {
+            	SalesOrderLineEntity soLineEntity = new SalesOrderLineEntity();
+            	soLineEntity.setOrderNumber(orderNumber);
+            	soLines.add(soLineEntity);
+            }
+            bean.setOrderLines(soLines);
         }
 		
 		if (mode <= 0) {

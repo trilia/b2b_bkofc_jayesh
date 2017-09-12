@@ -3,6 +3,7 @@ package com.olp.jpa.domain.docu.fin.repo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Service;
 
 import com.olp.fwk.common.error.EntityValidationException;
 import com.olp.jpa.common.AbstractServiceImpl;
@@ -13,6 +14,7 @@ import com.olp.jpa.domain.docu.fin.model.CustomerPaymentEntity;
  * @author Jayesh
  *
  */
+@Service("customerPaymentService")
 public class CustomerPaymentServiceImpl extends AbstractServiceImpl<CustomerPaymentEntity,Long> implements CustomerPaymentService {
 
 	@Autowired

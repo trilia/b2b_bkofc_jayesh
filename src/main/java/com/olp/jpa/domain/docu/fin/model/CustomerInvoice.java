@@ -21,7 +21,7 @@ public class CustomerInvoice implements Serializable {
 
 	private Long id;
 	
-	private Long tenantId;
+	private String tenantId;
 	
 	private String invoiceNumber;
 
@@ -76,14 +76,14 @@ public class CustomerInvoice implements Serializable {
 	/**
 	 * @return the tenantId
 	 */
-	public Long getTenantId() {
+	public String getTenantId() {
 		return tenantId;
 	}
 
 	/**
 	 * @param tenantId the tenantId to set
 	 */
-	public void setTenantId(Long tenantId) {
+	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
 	}
 

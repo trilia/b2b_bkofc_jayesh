@@ -11,8 +11,8 @@ import com.olp.jpa.common.AbstractServiceImpl;
 import com.olp.jpa.common.ITextRepository;
 import com.olp.jpa.domain.docu.be.model.SupplierEntity;
 import com.olp.jpa.domain.docu.be.model.SupplierLocationEntity;
-import com.olp.jpa.domain.docu.be.repo.SupplierLocationRepository;
 import com.olp.jpa.domain.docu.be.repo.SupplierRepository;
+import com.olp.jpa.domain.docu.be.service.SupplierLocationRepository;
 import com.olp.jpa.domain.docu.org.model.LocationEntity;
 import com.olp.jpa.domain.docu.org.repo.LocationRepository;
 import com.olp.jpa.domain.docu.po.model.PurchaseOrderEntity;
@@ -176,10 +176,12 @@ public class PurchaseOrderServiceImpl extends AbstractServiceImpl<PurchaseOrderE
             
             case ADD : {
                 result = preProcessAdd(entity);
+                result.setResult(true);
                 break;
             }
             case ADD_BULK : {
                 result = preProcessAdd(entity);
+                result.setResult(true);
                 break;
             }
             default: {
@@ -198,7 +200,7 @@ public class PurchaseOrderServiceImpl extends AbstractServiceImpl<PurchaseOrderE
             result.setErrorMessage("Null entity found for PurchaseOrderEntity !!");
         }
         validate(entity);
-        
+        updateTenantWithRevision(entity);   
         return(result);
 	}
 

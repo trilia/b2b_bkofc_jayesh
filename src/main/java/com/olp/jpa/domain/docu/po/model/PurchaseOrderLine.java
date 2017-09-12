@@ -47,7 +47,7 @@ public class PurchaseOrderLine implements Serializable {
 	private Long id;
 	
 	@XmlTransient
-	private Long tenantId;
+	private String tenantId;
 	
 	@XmlElement(name="po-number")
 	private String lineNumber;
@@ -95,14 +95,14 @@ public class PurchaseOrderLine implements Serializable {
 	/**
 	 * @return the tenantId
 	 */
-	public Long getTenantId() {
+	public String getTenantId() {
 		return tenantId;
 	}
 
 	/**
 	 * @param tenantId the tenantId to set
 	 */
-	public void setTenantId(Long tenantId) {
+	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
 	}
 

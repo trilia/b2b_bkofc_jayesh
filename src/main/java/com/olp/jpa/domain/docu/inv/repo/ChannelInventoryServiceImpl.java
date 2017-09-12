@@ -3,28 +3,29 @@ package com.olp.jpa.domain.docu.inv.repo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Service;
 
 import com.olp.fwk.common.error.EntityValidationException;
 import com.olp.jpa.common.AbstractServiceImpl;
 import com.olp.jpa.common.ITextRepository;
 import com.olp.jpa.domain.docu.inv.model.ChannelInventoryEntity;
-import com.olp.jpa.domain.docu.sm.model.SalesChannelEntity;
 
 /**
  * @author Jayesh
  *
  */
+@Service("channelInventoryService")
 public class ChannelInventoryServiceImpl extends AbstractServiceImpl<ChannelInventoryEntity,Long> implements ChannelInventoryService {
 
 	@Autowired
 	@Qualifier("channelInventoryRepository")
 	private ChannelInventoryRepository channelInventoryRepo;
 	 
-	/*@Override
-	public SalesChannelEntity findByChannelCode(String channelCode){
-		SalesChannelEntity bean = salesChannelRepo.findByChannelCode(channelCode);
+	@Override
+	public ChannelInventoryEntity findChannelInventoryBySku(String skuCode,String channelCode){
+		ChannelInventoryEntity bean = channelInventoryRepo.findChannelInventoryBySku(skuCode, channelCode);
         return(bean);
-	}*/
+	}
 
 	@Override
 	protected JpaRepository<ChannelInventoryEntity, Long> getRepository() {
@@ -69,6 +70,7 @@ public class ChannelInventoryServiceImpl extends AbstractServiceImpl<ChannelInve
 	}
 
 	private void preProcessAdd(ChannelInventoryEntity entity) throws EntityValidationException {
+		entity.setSkuCode(entity.getSkuRef().getSkuCode());
 		validate(entity);
 		updateTenantWithRevision(entity); 
 	}

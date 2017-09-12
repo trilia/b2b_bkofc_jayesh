@@ -1,6 +1,7 @@
 package com.olp.jpa.domain.docu.be.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -42,12 +43,12 @@ import com.olp.jpa.domain.docu.org.model.LocationEntity;
 @Table(name="trl_supplier_locations", uniqueConstraints={@javax.persistence.UniqueConstraint(columnNames={"tenant_id", "location_code"})})
 @Indexed(index="SetupDataIndex")
 @FullTextFilterDef(name="filter-locations", impl=TenantBasedSearchFilterFactory.class)
-@NamedQueries({@javax.persistence.NamedQuery(name="Supplier.findByLocationCode", query="SELECT t from SupplierEntity t WHERE t.supplierCode = :code ")})
+@NamedQueries({@javax.persistence.NamedQuery(name="Supplier.findByLocationCode", query="SELECT t from SupplierLocationEntity t WHERE t.locationCode = :code ")})
 @MultiTenant(level=MultiTenant.Levels.ONE_TENANT)
-@SortCriteria(attributes={"supplierCode"})
+@SortCriteria(attributes={"locationCode"})
 public class SupplierLocationEntity  implements Serializable {
 	
-	private static final long serialVersionUID = -5294233297759393523L;
+	private static final long serialVersionUID = 1L;
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -92,7 +93,7 @@ public class SupplierLocationEntity  implements Serializable {
 	
 	@OneToMany(mappedBy="supplierLocRef", cascade={javax.persistence.CascadeType.ALL})
 	@IndexedEmbedded(includeEmbeddedObjectId=true, depth=1)
-	private List<BankAccountEntity> bankAccounts;
+	private List<BankAccountEntity> bankAccounts = new ArrayList();
 	
 	@ManyToOne
 	@JoinColumn(name="supplier_ref")

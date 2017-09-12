@@ -5,20 +5,20 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Service;
 
 import com.olp.fwk.common.error.EntityValidationException;
 import com.olp.jpa.common.AbstractServiceImpl;
 import com.olp.jpa.common.ITextRepository;
-import com.olp.jpa.common.AbstractServiceImpl.Outcome;
 import com.olp.jpa.domain.docu.fin.model.CustomerInvoiceEntity;
 import com.olp.jpa.domain.docu.fin.model.CustomerInvoiceLineEntity;
 import com.olp.jpa.domain.docu.fin.model.FinEnums;
-import com.olp.jpa.domain.docu.om.model.OrderEnums;
 
 /**
  * @author Jayesh
  *
  */
+@Service("customerInvoiceService")
 public class CustomerInvoiceServiceImpl extends AbstractServiceImpl<CustomerInvoiceEntity,Long> implements CustomerInvoiceService {
 
 	@Autowired
@@ -57,10 +57,12 @@ public class CustomerInvoiceServiceImpl extends AbstractServiceImpl<CustomerInvo
             
             case ADD : {
                 preProcessAdd(entity);
+                result.setResult(true);
                 break;
             }
             case ADD_BULK : {
                 preProcessAdd(entity);
+                result.setResult(true);
                 break;
             }
             default: {
@@ -94,6 +96,7 @@ public class CustomerInvoiceServiceImpl extends AbstractServiceImpl<CustomerInvo
 		entity.setTaxGroupCode(entity.getTaxGroupRef().getGroupCode());
 		entity.setPromoGroupCode(entity.getPromoGroupRef().getGroupCode());
 		entity.setCustomerCode(entity.getCustomerRef().getCustomerCode());
+		entity.setOrderNumber(entity.getOrderRef().getOrderNumber());
 		
 		List<CustomerInvoiceLineEntity> invoiceLines = entity.getInvoiceLines();
 		float baseTotalAmount = 0;
@@ -109,16 +112,16 @@ public class CustomerInvoiceServiceImpl extends AbstractServiceImpl<CustomerInvo
 		entity.setDiscTotalAmount(discountTotalAmount);
 
 		if (FinEnums.CustInvoiceType.STANDARD.equals(entity.getInvoiceType())) {
-			if (!FinEnums.PaymentTerm.COD.equals(entity.getPaymentTerm())
-					|| !FinEnums.PaymentTerm.IMMEDIATE.equals(entity.getPaymentTerm())) {
+			if (!(FinEnums.PaymentTerm.COD.equals(entity.getPaymentTerm())
+					|| FinEnums.PaymentTerm.IMMEDIATE.equals(entity.getPaymentTerm()))) {
 				throw new EntityValidationException(
 						"Payment Term for Standard Invoice Type can be either COD or IMMEDIATE");
 			}
 		}
 
 		if (FinEnums.CustInvoiceType.CREDITINV.equals(entity.getInvoiceType())) {
-			if (!FinEnums.PaymentTerm.REFUND.equals(entity.getPaymentTerm())
-					|| !FinEnums.PaymentTerm.CREDIT.equals(entity.getPaymentTerm())) {
+			if (!(FinEnums.PaymentTerm.REFUND.equals(entity.getPaymentTerm())
+					|| FinEnums.PaymentTerm.CREDIT.equals(entity.getPaymentTerm()))) {
 				throw new EntityValidationException(
 						"Payment Term for Standard Invoice Type can be either REFUND or CREDIT");
 			}

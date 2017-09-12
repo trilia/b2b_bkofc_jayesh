@@ -4,12 +4,9 @@
 package com.olp.jpa.domain.docu.fin.model;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Date;
 
 import com.olp.jpa.common.RevisionControlBean;
-import com.olp.jpa.domain.docu.mkt.model.PromotionGroupEntity;
-import com.olp.jpa.domain.docu.om.model.SalesOrderLineEntity;
 
 /**
  * @author Jayesh
@@ -22,7 +19,7 @@ public class CustomerPayment implements Serializable {
 
 	private Long id;
 	
-	private Long tenantId;
+	private String tenantId;
 	
 	private String paymentNumber;
 	
@@ -63,14 +60,14 @@ public class CustomerPayment implements Serializable {
 	/**
 	 * @return the tenantId
 	 */
-	public Long getTenantId() {
+	public String getTenantId() {
 		return tenantId;
 	}
 
 	/**
 	 * @param tenantId the tenantId to set
 	 */
-	public void setTenantId(Long tenantId) {
+	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
 	}
 

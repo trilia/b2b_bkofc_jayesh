@@ -10,6 +10,7 @@ import com.olp.jpa.common.AbstractServiceImpl;
 import com.olp.jpa.common.ITextRepository;
 import com.olp.jpa.domain.docu.om.model.OrderEnums;
 import com.olp.jpa.domain.docu.om.model.OrderEnums.OrderLineStatus;
+import com.olp.jpa.domain.docu.om.model.OrderEnums.OrderStatus;
 import com.olp.jpa.domain.docu.om.model.SalesOrderLineEntity;
 
 /**
@@ -52,15 +53,18 @@ public class SalesOrderLineServiceImpl extends AbstractServiceImpl<SalesOrderLin
 	@Override
 	protected AbstractServiceImpl<SalesOrderLineEntity, Long>.Outcome preProcess(int opCode, SalesOrderLineEntity entity)
 			throws EntityValidationException {
+		entity.setProductSkuCode(entity.getProductSkuRef().getSkuCode());
 		Outcome result = new Outcome();
         switch(opCode) {
             
             case ADD : {
                 preProcessAdd(entity);
+                result.setResult(true);
                 break;
             }
             case ADD_BULK : {
                 preProcessAdd(entity);
+                result.setResult(true);
                 break;
             }
             default: {
@@ -86,7 +90,20 @@ public class SalesOrderLineServiceImpl extends AbstractServiceImpl<SalesOrderLin
 		switch (opCode) {
 			case UPDATE :{
 				if(!OrderLineStatus.RECEIVED.equals(entity.getLineStatus().RECEIVED)){
-					//if(entity.getOrderRef().get)
+					boolean isOrderDelivered = true;
+					for(SalesOrderLineEntity soLineEntity : entity.getOrderRef().getOrderLines()){
+						if(!OrderLineStatus.DELIVERED.equals(soLineEntity.getLineStatus().DELIVERED)){
+							isOrderDelivered = false;
+							break;
+							
+						}
+					}
+					if(isOrderDelivered){
+						entity.getOrderRef().setOrderStatus(OrderStatus.FULFILLED);
+					}else{
+						entity.getOrderRef().setOrderStatus(OrderStatus.PROCESSING);
+					}
+					
 				}
 			}
 		}

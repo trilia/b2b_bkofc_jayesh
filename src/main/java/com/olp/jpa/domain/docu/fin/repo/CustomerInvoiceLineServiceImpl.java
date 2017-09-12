@@ -3,6 +3,7 @@ package com.olp.jpa.domain.docu.fin.repo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Service;
 
 import com.olp.fwk.common.error.EntityValidationException;
 import com.olp.jpa.common.AbstractServiceImpl;
@@ -13,10 +14,11 @@ import com.olp.jpa.domain.docu.fin.model.CustomerInvoiceLineEntity;
  * @author Jayesh
  *
  */
+@Service("customerInvoiceLineService")
 public class CustomerInvoiceLineServiceImpl extends AbstractServiceImpl<CustomerInvoiceLineEntity,Long> implements CustomerInvoiceLineService {
 
 	@Autowired
-	@Qualifier("bankAcctRepository")
+	@Qualifier("customerInvoiceLineRepository")
 	private CustomerInvoiceLineRepository custInvLineRepo;
 	 
 	@Override
@@ -83,9 +85,9 @@ public class CustomerInvoiceLineServiceImpl extends AbstractServiceImpl<Customer
 
 	@Override
 	public void validate(CustomerInvoiceLineEntity entity) throws EntityValidationException {
-		entity.setTaxGroupCode(entity.getTaxGroupRef().getGroupCode());
+		/*entity.setTaxGroupCode(entity.getTaxGroupRef().getGroupCode());
 		entity.setPromoGroupCode(entity.getPromoGroupRef().getGroupCode());
-		entity.setInvoiceLineNumber(entity.getOrderLineRef().getLineNumber());
+		entity.setInvoiceLineNumber(entity.getOrderLineRef().getLineNumber());*/
 		//entity.setInvoiceNumber(entity.getInvoiceRef().getInvoiceNumber());
 		
 	}

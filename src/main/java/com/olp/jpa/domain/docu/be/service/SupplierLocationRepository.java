@@ -1,4 +1,4 @@
-package com.olp.jpa.domain.docu.be.repo;
+package com.olp.jpa.domain.docu.be.service;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.repository.NoRepositoryBean;
